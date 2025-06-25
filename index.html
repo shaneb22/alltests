@@ -45,16 +45,42 @@
             animation: fadeInUp 1s ease-out 0.3s both;
         }
 
-        .chat-indicator {
+        .chat-widget-container {
+            margin-top: 2rem;
+            animation: fadeInUp 1s ease-out 0.6s both;
+        }
+
+        .chat-placeholder {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 30px;
+            border-radius: 20px;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            max-width: 400px;
+            margin: 0 auto;
+            min-height: 300px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .loading-spinner {
+            width: 40px;
+            height: 40px;
+            border: 3px solid rgba(255, 255, 255, 0.3);
+            border-top: 3px solid #4ade80;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        .chat-status {
             display: inline-flex;
             align-items: center;
             gap: 10px;
-            background: rgba(255, 255, 255, 0.1);
-            padding: 15px 25px;
-            border-radius: 50px;
-            backdrop-filter: blur(10px);
-            border: 1px solid rgba(255, 255, 255, 0.2);
-            animation: fadeInUp 1s ease-out 0.6s both;
+            color: rgba(255, 255, 255, 0.9);
+            font-size: 1.1rem;
         }
 
         .pulse-dot {
@@ -63,6 +89,11 @@
             background: #4ade80;
             border-radius: 50%;
             animation: pulse 2s infinite;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
         }
 
         .floating-shapes {
@@ -177,13 +208,66 @@
     <div class="container">
         <h1 class="live-chat-title">Live Chat</h1>
         <p class="subtitle">Connect with us instantly</p>
-        <div class="chat-indicator">
-            <div class="pulse-dot"></div>
-            <span>Chat Available</span>
+        
+        <!-- Chat Widget Container -->
+        <div class="chat-widget-container">
+            <div class="chat-placeholder" id="chatPlaceholder">
+                <div class="loading-spinner"></div>
+                <div class="chat-status">
+                    <div class="pulse-dot"></div>
+                    <span>Loading Chat Widget...</span>
+                </div>
+            </div>
         </div>
     </div>
 
     <!-- Live Chat Widget -->
     <script src="https://livechat-shackletonlife.connexone.co.uk/widget?connid=b59df615-f8ea-45f2-b2ab-38354699f812" id="livechat-shackletonlife" data-socket-uri="https://livechat-shackletonlife.connexone.co.uk"></script>
+    
+    <script>
+        // Monitor for chat widget loading
+        document.addEventListener('DOMContentLoaded', function() {
+            const placeholder = document.getElementById('chatPlaceholder');
+            
+            // Check if chat widget has loaded
+            const checkChatWidget = setInterval(function() {
+                // Look for common chat widget elements or the script execution
+                if (document.querySelector('#livechat-shackletonlife') || 
+                    document.querySelector('[id*="livechat"]') || 
+                    document.querySelector('[class*="livechat"]') ||
+                    document.querySelector('[data-livechat]')) {
+                    
+                    clearInterval(checkChatWidget);
+                    
+                    // Update placeholder to show chat is ready
+                    placeholder.innerHTML = `
+                        <div class="chat-status">
+                            <div class="pulse-dot"></div>
+                            <span>Chat Widget Ready</span>
+                        </div>
+                        <p style="margin-top: 10px; font-size: 0.9rem; opacity: 0.8;">
+                            The chat widget should appear on this page
+                        </p>
+                    `;
+                }
+            }, 500);
+            
+            // Timeout after 10 seconds
+            setTimeout(function() {
+                clearInterval(checkChatWidget);
+                if (placeholder.innerHTML.includes('Loading')) {
+                    placeholder.innerHTML = `
+                        <div class="chat-status">
+                            <div class="pulse-dot"></div>
+                            <span>Chat Available</span>
+                        </div>
+                        <p style="margin-top: 10px; font-size: 0.9rem; opacity: 0.8;">
+                            Chat widget is loading...
+                        </p>
+                    `;
+                }
+            }, 10000);
+        });
+    </script>
 </body>
 </html>
