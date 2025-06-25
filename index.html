@@ -52,7 +52,6 @@
             left: 120px;
             z-index: 1000;
             pointer-events: none;
-            /* Ensure the pointer-text is to the right of the arrow */
             animation: superVividEntrance 2s ease-out, continuousFloat 5s ease-in-out infinite 3s;
         }
 
@@ -61,7 +60,7 @@
             display: flex;
             align-items: center;
             gap: 15px;
-            /* Changed flex direction and reverse */
+            /* Changed flex direction and reverse to put arrow on the right of text */
             flex-direction: row-reverse;
         }
 
@@ -162,33 +161,33 @@
         @keyframes superVividEntrance {
             0% {
                 opacity: 0;
-                /* Changed from translateX(50px) to translateX(-50px) */
-                transform: translateX(-50px) scale(0.3) rotate(-10deg); /* Adjusted rotation */
+                /* Start far left */
+                transform: translateX(-200px) scale(0.3) rotate(-10deg);
             }
             50% {
                 opacity: 1;
-                /* Changed from translateX(-10px) to translateX(10px) */
-                transform: translateX(10px) scale(1.2) rotate(5deg); /* Adjusted rotation */
+                /* Overshoot a little to the right for a bounce effect */
+                transform: translateX(20px) scale(1.2) rotate(5deg);
             }
             100% {
                 opacity: 1;
+                /* Settle at final position (left: 120px) */
                 transform: translateX(0) scale(1) rotate(0deg);
             }
         }
-
 
         @keyframes megaBounce {
             0%, 100% {
                 transform: translateX(0) scale(1);
             }
             25% {
-                transform: translateX(-15px) scale(1.1); /* Changed to negative for left movement */
+                transform: translateX(-15px) scale(1.1); /* Bounce left */
             }
             50% {
-                transform: translateX(-25px) scale(1.2); /* Changed to negative for left movement */
+                transform: translateX(-25px) scale(1.2); /* Bounce further left */
             }
             75% {
-                transform: translateX(-10px) scale(1.1); /* Changed to negative for left movement */
+                transform: translateX(-10px) scale(1.1); /* Bounce back slightly right */
             }
         }
 
