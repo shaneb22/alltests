@@ -48,9 +48,11 @@
         .chat-pointer {
             position: fixed;
             bottom: 120px;
-            right: 120px;
+            /* Changed from right to left */
+            left: 120px;
             z-index: 1000;
             pointer-events: none;
+            /* Ensure the pointer-text is to the right of the arrow */
             animation: superVividEntrance 2s ease-out, continuousFloat 5s ease-in-out infinite 3s;
         }
 
@@ -59,6 +61,8 @@
             display: flex;
             align-items: center;
             gap: 15px;
+            /* Changed flex direction and reverse */
+            flex-direction: row-reverse;
         }
 
         .arrow {
@@ -66,7 +70,8 @@
             height: 0;
             border-top: 20px solid transparent;
             border-bottom: 20px solid transparent;
-            border-left: 30px solid #ff6b6b;
+            /* Changed border-left to border-right */
+            border-right: 30px solid #ff6b6b;
             animation: megaBounce 1s infinite;
             filter: drop-shadow(0 0 10px rgba(255, 107, 107, 0.8)) drop-shadow(0 0 20px rgba(255, 107, 107, 0.6));
         }
@@ -157,11 +162,13 @@
         @keyframes superVividEntrance {
             0% {
                 opacity: 0;
-                transform: translateX(50px) scale(0.3) rotate(10deg);
+                /* Changed from translateX(50px) to translateX(-50px) */
+                transform: translateX(-50px) scale(0.3) rotate(-10deg); /* Adjusted rotation */
             }
             50% {
                 opacity: 1;
-                transform: translateX(-10px) scale(1.2) rotate(-5deg);
+                /* Changed from translateX(-10px) to translateX(10px) */
+                transform: translateX(10px) scale(1.2) rotate(5deg); /* Adjusted rotation */
             }
             100% {
                 opacity: 1;
@@ -169,18 +176,19 @@
             }
         }
 
+
         @keyframes megaBounce {
             0%, 100% {
                 transform: translateX(0) scale(1);
             }
             25% {
-                transform: translateX(15px) scale(1.1);
+                transform: translateX(-15px) scale(1.1); /* Changed to negative for left movement */
             }
             50% {
-                transform: translateX(25px) scale(1.2);
+                transform: translateX(-25px) scale(1.2); /* Changed to negative for left movement */
             }
             75% {
-                transform: translateX(10px) scale(1.1);
+                transform: translateX(-10px) scale(1.1); /* Changed to negative for left movement */
             }
         }
 
@@ -229,7 +237,7 @@
         @media (max-width: 768px) {
             .chat-pointer {
                 bottom: 100px;
-                right: 80px;
+                left: 80px; /* Changed from right to left */
             }
             
             .pointer-text {
@@ -238,7 +246,7 @@
             }
             
             .arrow {
-                border-left-width: 25px;
+                border-right-width: 25px; /* Changed to border-right-width */
                 border-top-width: 16px;
                 border-bottom-width: 16px;
             }
@@ -247,7 +255,7 @@
         @media (max-width: 480px) {
             .chat-pointer {
                 bottom: 80px;
-                right: 60px;
+                left: 60px; /* Changed from right to left */
             }
             
             .pointer-text {
@@ -256,7 +264,7 @@
             }
             
             .arrow {
-                border-left-width: 20px;
+                border-right-width: 20px; /* Changed to border-right-width */
                 border-top-width: 14px;
                 border-bottom-width: 14px;
             }
@@ -365,7 +373,6 @@
         <p class="subtitle">Connect with us instantly</p>
     </div>
 
-    <!-- Animated pointer to chat widget -->
     <div class="chat-pointer" id="chatPointer">
         <div class="arrow-container">
             <div class="pointer-text">
@@ -378,7 +385,6 @@
         </div>
     </div>
 
-    <!-- Live Chat Widget -->
     <script src="https://livechat-shackletonlife.connexone.co.uk/widget?connid=b59df615-f8ea-45f2-b2ab-38354699f812" id="livechat-shackletonlife" data-socket-uri="https://livechat-shackletonlife.connexone.co.uk"></script>
 </body>
 </html>
