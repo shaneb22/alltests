@@ -96,6 +96,186 @@
             100% { transform: rotate(360deg); }
         }
 
+        .chat-pointer {
+            position: fixed;
+            bottom: 120px;
+            right: 120px;
+            z-index: 1000;
+            pointer-events: none;
+            animation: superVividEntrance 2s ease-out 3s both;
+        }
+
+        .arrow-container {
+            position: relative;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .arrow {
+            width: 0;
+            height: 0;
+            border-top: 20px solid transparent;
+            border-bottom: 20px solid transparent;
+            border-left: 30px solid #ff6b6b;
+            animation: megaBounce 1s infinite;
+            filter: drop-shadow(0 0 10px rgba(255, 107, 107, 0.8)) drop-shadow(0 0 20px rgba(255, 107, 107, 0.6));
+        }
+
+        .pointer-text {
+            background: linear-gradient(45deg, #ff6b6b, #ff8e8e, #ffa8a8);
+            color: white;
+            padding: 12px 20px;
+            border-radius: 25px;
+            font-size: 1rem;
+            font-weight: 700;
+            white-space: nowrap;
+            box-shadow: 0 8px 25px rgba(255, 107, 107, 0.4);
+            animation: vividPulse 1.5s infinite;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+            border: 2px solid rgba(255, 255, 255, 0.3);
+        }
+
+        .animated-dots {
+            display: inline-block;
+            animation: superDots 1s infinite;
+        }
+
+        .sparkle {
+            position: absolute;
+            width: 6px;
+            height: 6px;
+            background: #ffeb3b;
+            border-radius: 50%;
+            animation: sparkleAnim 2s infinite;
+        }
+
+        .sparkle:nth-child(1) {
+            top: -10px;
+            left: 10px;
+            animation-delay: 0s;
+        }
+
+        .sparkle:nth-child(2) {
+            top: 5px;
+            right: -10px;
+            animation-delay: 0.5s;
+        }
+
+        .sparkle:nth-child(3) {
+            bottom: -5px;
+            left: 30px;
+            animation-delay: 1s;
+        }
+
+        @keyframes superVividEntrance {
+            0% {
+                opacity: 0;
+                transform: translateX(50px) scale(0.3) rotate(10deg);
+            }
+            50% {
+                opacity: 1;
+                transform: translateX(-10px) scale(1.2) rotate(-5deg);
+            }
+            100% {
+                opacity: 1;
+                transform: translateX(0) scale(1) rotate(0deg);
+            }
+        }
+
+        @keyframes megaBounce {
+            0%, 100% {
+                transform: translateX(0) scale(1);
+            }
+            25% {
+                transform: translateX(15px) scale(1.1);
+            }
+            50% {
+                transform: translateX(25px) scale(1.2);
+            }
+            75% {
+                transform: translateX(10px) scale(1.1);
+            }
+        }
+
+        @keyframes vividPulse {
+            0% {
+                transform: scale(1);
+                box-shadow: 0 8px 25px rgba(255, 107, 107, 0.4);
+            }
+            50% {
+                transform: scale(1.05);
+                box-shadow: 0 12px 35px rgba(255, 107, 107, 0.8);
+            }
+            100% {
+                transform: scale(1);
+                box-shadow: 0 8px 25px rgba(255, 107, 107, 0.4);
+            }
+        }
+
+        @keyframes superDots {
+            0% {
+                opacity: 0;
+                transform: scale(0.8);
+            }
+            50% {
+                opacity: 1;
+                transform: scale(1.2);
+                color: #ffeb3b;
+            }
+            100% {
+                opacity: 0;
+                transform: scale(0.8);
+            }
+        }
+
+        @keyframes sparkleAnim {
+            0%, 100% {
+                opacity: 0;
+                transform: scale(0) rotate(0deg);
+            }
+            50% {
+                opacity: 1;
+                transform: scale(1) rotate(180deg);
+            }
+        }
+
+        @media (max-width: 768px) {
+            .chat-pointer {
+                bottom: 100px;
+                right: 80px;
+            }
+            
+            .pointer-text {
+                font-size: 0.9rem;
+                padding: 10px 16px;
+            }
+            
+            .arrow {
+                border-left-width: 25px;
+                border-top-width: 16px;
+                border-bottom-width: 16px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .chat-pointer {
+                bottom: 80px;
+                right: 60px;
+            }
+            
+            .pointer-text {
+                font-size: 0.8rem;
+                padding: 8px 14px;
+            }
+            
+            .arrow {
+                border-left-width: 20px;
+                border-top-width: 14px;
+                border-bottom-width: 14px;
+            }
+        }
+
         .floating-shapes {
             position: absolute;
             top: 0;
@@ -221,6 +401,19 @@
         </div>
     </div>
 
+    <!-- Animated pointer to chat widget -->
+    <div class="chat-pointer" id="chatPointer">
+        <div class="arrow-container">
+            <div class="pointer-text">
+                <div class="sparkle"></div>
+                <div class="sparkle"></div>
+                <div class="sparkle"></div>
+                💬 Click here to start chatting<span class="animated-dots">!</span>
+            </div>
+            <div class="arrow"></div>
+        </div>
+    </div>
+
     <!-- Live Chat Widget -->
     <script src="https://livechat-shackletonlife.connexone.co.uk/widget?connid=b59df615-f8ea-45f2-b2ab-38354699f812" id="livechat-shackletonlife" data-socket-uri="https://livechat-shackletonlife.connexone.co.uk"></script>
     
@@ -228,6 +421,7 @@
         // Monitor for chat widget loading
         document.addEventListener('DOMContentLoaded', function() {
             const placeholder = document.getElementById('chatPlaceholder');
+            const chatPointer = document.getElementById('chatPointer');
             
             // Check if chat widget has loaded
             const checkChatWidget = setInterval(function() {
@@ -246,13 +440,33 @@
                             <span>Chat Widget Ready</span>
                         </div>
                         <p style="margin-top: 10px; font-size: 0.9rem; opacity: 0.8;">
-                            The chat widget should appear on this page
+                            Look for the chat widget in the bottom corner!
                         </p>
                     `;
                 }
             }, 500);
             
-            // Timeout after 10 seconds
+            // Hide pointer after 15 seconds or when clicked
+            setTimeout(function() {
+                if (chatPointer) {
+                    chatPointer.style.animation = 'superVividEntrance 1s ease-out reverse';
+                    setTimeout(() => {
+                        chatPointer.style.display = 'none';
+                    }, 1000);
+                }
+            }, 15000);
+            
+            // Hide pointer when anywhere is clicked
+            document.addEventListener('click', function() {
+                if (chatPointer && chatPointer.style.display !== 'none') {
+                    chatPointer.style.animation = 'superVividEntrance 0.5s ease-out reverse';
+                    setTimeout(() => {
+                        chatPointer.style.display = 'none';
+                    }, 500);
+                }
+            });
+            
+            // Timeout after 10 seconds for widget detection
             setTimeout(function() {
                 clearInterval(checkChatWidget);
                 if (placeholder.innerHTML.includes('Loading')) {
@@ -262,7 +476,7 @@
                             <span>Chat Available</span>
                         </div>
                         <p style="margin-top: 10px; font-size: 0.9rem; opacity: 0.8;">
-                            Chat widget is loading...
+                            Look for the chat widget in the bottom corner!
                         </p>
                     `;
                 }
