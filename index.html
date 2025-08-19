@@ -3,7 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Elevate Events - Premium Event Decoration</title>
+    <title>Deluxe Design Creations - Premium Event Decoration</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" integrity="sha512-SnH5WK+bZxgPHs44uWIX+LLJAJ9/20B7+q6/8A8n48+n7g13K5y1F5w05t/W5qR5y5+p5e/e5G/w5g5+w5/p5w5/w5Q==" crossorigin="anonymous" referrerpolicy="no-referrer" />
     <style>
         * {
             margin: 0;
@@ -12,12 +13,12 @@
         }
 
         body {
-            font-family: 'Arial', sans-serif;
-            line-height: 1.6;
-            color: #333;
+            font-family: 'Inter', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.4;
+            color: #2d3748;
             background: linear-gradient(135deg, #667eea 0%, #764ba2 50%, #f093fb 100%);
             min-height: 100vh;
-            animation: gradientShift 8s ease infinite;
+            animation: gradientShift 12s ease infinite;
         }
 
         @keyframes gradientShift {
@@ -34,51 +35,129 @@
             padding: 0 20px;
         }
 
-        /* Header */
-        header {
+        /* Business Name Header - NEW FOCAL POINT */
+        .business-header {
             background: rgba(255, 255, 255, 0.98);
-            backdrop-filter: blur(20px);
-            border-bottom: 1px solid rgba(0, 0, 0, 0.08);
+            backdrop-filter: blur(25px);
+            border-bottom: 3px solid transparent;
+            border-image: linear-gradient(45deg, #ff6b6b, #4ecdc4, #45b7d1, #96ceb4) 1;
             position: fixed;
             width: 100%;
             top: 0;
             z-index: 1000;
-            box-shadow: 0 2px 20px rgba(0, 0, 0, 0.1);
-            transition: all 0.3s ease;
-            padding: 1rem 0;
+            box-shadow: 0 5px 30px rgba(0, 0, 0, 0.15);
+            padding: 1.5rem 0;
+        }
+
+        .business-name-container {
+            text-align: center;
+            position: relative;
+        }
+
+        .business-name {
+            font-size: 3.5rem;
+            font-weight: 900;
+            letter-spacing: -1px;
+            background: linear-gradient(45deg, #ff6b6b, #4ecdc4, #45b7d1, #96ceb4, #ffeaa7);
+            background-size: 300% 300%;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            animation: gradientFlow 4s ease infinite, businessPulse 3s ease-in-out infinite;
+            text-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+            position: relative;
+            display: inline-block;
+        }
+
+        .business-name::before {
+            content: '✨';
+            position: absolute;
+            left: -60px;
+            top: 50%;
+            transform: translateY(-50%);
+            font-size: 2.5rem;
+            animation: sparkle 2s ease-in-out infinite;
+        }
+
+        .business-name::after {
+            content: '✨';
+            position: absolute;
+            right: -60px;
+            top: 50%;
+            transform: translateY(-50%);
+            font-size: 2.5rem;
+            animation: sparkle 2s ease-in-out infinite 1s;
+        }
+
+        .business-tagline {
+            font-size: 1.2rem;
+            color: #666;
+            margin-top: 0.5rem;
+            font-weight: 500;
+            letter-spacing: 0.5px;
+            animation: fadeInUp 1s ease 0.5s both;
+        }
+
+        @keyframes businessPulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.02); }
+        }
+
+        @keyframes sparkle {
+            0%, 100% { 
+                transform: translateY(-50%) rotate(0deg) scale(1);
+                opacity: 0.7;
+            }
+            50% { 
+                transform: translateY(-50%) rotate(180deg) scale(1.2);
+                opacity: 1;
+            }
+        }
+
+        @keyframes gradientFlow {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Navigation - Moved below business name */
+        .navigation {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(20px);
+            border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+            position: fixed;
+            width: 100%;
+            top: 140px; /* Adjusted to be responsive to the header size */
+            z-index: 999;
+            box-shadow: 0 2px 15px rgba(0, 0, 0, 0.08);
+            padding: 0.8rem 0;
         }
 
         nav {
             display: flex;
-            justify-content: space-between;
+            justify-content: center;
             align-items: center;
-            padding: 0;
             position: relative;
-        }
-
-        .logo {
-            font-size: 1.8rem;
-            font-weight: 800;
-            color: #1a1a1a;
-            letter-spacing: -0.5px;
-            position: relative;
-        }
-
-        .logo::after {
-            content: '✨';
-            position: absolute;
-            right: -25px;
-            top: -2px;
-            font-size: 1.2rem;
         }
 
         .nav-container {
             display: flex;
-            background: #f8f9fa;
-            border-radius: 12px;
-            padding: 4px;
-            border: 1px solid #e9ecef;
-            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+            background: #ffffff;
+            border-radius: 16px;
+            padding: 6px;
+            border: 1px solid #e2e8f0;
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.04);
         }
 
         .nav-links {
@@ -91,51 +170,59 @@
 
         .nav-links a {
             text-decoration: none;
-            color: #6c757d;
+            color: #64748b;
             font-weight: 500;
             font-size: 0.9rem;
             transition: all 0.2s ease;
-            padding: 8px 16px;
-            border-radius: 8px;
+            padding: 10px 18px;
+            border-radius: 12px;
             position: relative;
             white-space: nowrap;
+            display: flex;
+            align-items: center;
+            gap: 6px;
         }
 
         .nav-links a:hover {
-            color: #495057;
-            background: rgba(255, 255, 255, 0.8);
+            color: #475569;
+            background: #f8fafc;
+            transform: translateY(-1px);
         }
 
         .nav-links a.active {
-            color: #fff;
-            background: #007bff;
-            box-shadow: 0 2px 4px rgba(0, 123, 255, 0.3);
+            color: #ffffff;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            box-shadow: 0 4px 12px rgba(102, 126, 234, 0.25);
         }
 
         /* Mobile menu toggle */
         .mobile-menu-toggle {
             display: none;
-            background: #f8f9fa;
-            border: 1px solid #e9ecef;
-            border-radius: 8px;
-            padding: 8px 12px;
-            color: #495057;
-            font-size: 1.2rem;
+            background: #ffffff;
+            border: 1px solid #e2e8f0;
+            border-radius: 12px;
+            padding: 10px 14px;
+            color: #475569;
+            font-size: 1.1rem;
             cursor: pointer;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+            transition: all 0.2s ease;
+            position: absolute;
+            right: 20px;
         }
 
         .mobile-menu-toggle:hover {
-            background: #e9ecef;
+            background: #f8fafc;
+            transform: translateY(-1px);
         }
 
-        /* Main Content */
+        /* Main Content - Adjusted for new header height */
         main {
-            margin-top: 80px;
+            margin-top: 200px; /* Increased to accommodate larger header */
             background: rgba(255, 255, 255, 0.95);
             backdrop-filter: blur(20px);
             border-radius: 20px 20px 0 0;
-            min-height: calc(100vh - 80px);
+            min-height: calc(100vh - 200px);
             box-shadow: 0 -10px 40px rgba(31, 38, 135, 0.2);
             border: 1px solid rgba(255, 255, 255, 0.18);
         }
@@ -151,14 +238,20 @@
         }
 
         @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(20px); }
-            to { opacity: 1; transform: translateY(0); }
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
         }
 
-        /* Hero Section */
+        /* Hero Section - Simplified since business name is now prominent */
         .hero {
             text-align: center;
-            padding: 4rem 0;
+            padding: 3rem 0;
             background: linear-gradient(135deg, rgba(255, 107, 107, 0.1), rgba(78, 205, 196, 0.1), rgba(69, 183, 209, 0.1));
             border-radius: 20px;
             margin: 2rem 0;
@@ -167,7 +260,7 @@
         }
 
         .hero h1 {
-            font-size: 3.5rem;
+            font-size: 2.5rem;
             margin-bottom: 1rem;
             background: linear-gradient(45deg, #ff6b6b, #4ecdc4, #45b7d1, #96ceb4);
             background-size: 200% 200%;
@@ -203,8 +296,14 @@
         }
 
         @keyframes slideInUp {
-            from { opacity: 0; transform: translateY(30px); }
-            to { opacity: 1; transform: translateY(0); }
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
         }
 
         /* Theme Grid */
@@ -409,41 +508,23 @@
         /* WhatsApp Float Button */
         .whatsapp-float {
             position: fixed;
-            width: 70px;
-            height: 70px;
+            width: 60px;
+            height: 60px;
             bottom: 20px;
             right: 20px;
-            background: linear-gradient(45deg, #25d366, #128c7e);
-            color: white;
-            border-radius: 50px;
-            text-align: center;
-            font-size: 2.2rem;
-            box-shadow: 0 8px 30px rgba(37, 211, 102, 0.4);
             z-index: 1000;
-            transition: all 0.3s ease;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            text-decoration: none;
-            animation: pulse 2s infinite, float 3s ease-in-out infinite;
-            backdrop-filter: blur(10px);
-            border: 2px solid rgba(255, 255, 255, 0.2);
         }
 
-        .whatsapp-float:hover {
-            transform: scale(1.15);
-            box-shadow: 0 10px 35px rgba(37, 211, 102, 0.7);
+        .whatsapp-float img {
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            box-shadow: 2px 2px 8px rgba(0,0,0,0.3);
+            transition: all 0.3s ease-in-out;
         }
 
-        @keyframes float {
-            0%, 100% { transform: translateY(0px); }
-            50% { transform: translateY(-10px); }
-        }
-
-        @keyframes pulse {
-            0% { box-shadow: 0 4px 20px rgba(37, 211, 102, 0.4); }
-            50% { box-shadow: 0 4px 30px rgba(37, 211, 102, 0.7); }
-            100% { box-shadow: 0 4px 20px rgba(37, 211, 102, 0.4); }
+        .whatsapp-float img:hover {
+            transform: scale(1.1);
         }
 
         /* Section Headers */
@@ -471,6 +552,32 @@
 
         /* Mobile Responsive */
         @media (max-width: 768px) {
+            .business-name {
+                font-size: 2.5rem;
+            }
+
+            .business-name::before,
+            .business-name::after {
+                display: none; /* Hide sparkles on mobile for cleaner look */
+            }
+
+            .business-tagline {
+                font-size: 1rem;
+            }
+
+            .business-header {
+                padding: 1rem 0;
+            }
+            
+            /* Adjusted for proper spacing on mobile */
+            .navigation {
+                top: 100px;
+            }
+
+            main {
+                margin-top: 160px;
+            }
+
             .nav-container {
                 display: none;
                 position: absolute;
@@ -484,16 +591,16 @@
                 box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
                 margin-top: 8px;
             }
-            
+
             .nav-container.active {
                 display: block;
             }
-            
+
             .nav-links {
                 flex-direction: column;
                 gap: 4px;
             }
-            
+
             .nav-links a {
                 display: block;
                 text-align: left;
@@ -501,23 +608,23 @@
                 border-radius: 8px;
                 color: #6c757d;
             }
-            
+
             .nav-links a:hover {
                 background: #f8f9fa;
                 color: #495057;
             }
-            
+
             .nav-links a.active {
                 background: #007bff;
                 color: #fff;
             }
-            
+
             .mobile-menu-toggle {
                 display: block;
             }
 
             .hero h1 {
-                font-size: 2.5rem;
+                font-size: 2rem;
             }
 
             .about-content {
@@ -526,10 +633,6 @@
 
             .theme-grid {
                 grid-template-columns: 1fr;
-            }
-            
-            .logo {
-                font-size: 1.5rem;
             }
         }
 
@@ -552,34 +655,45 @@
             margin: 2rem 0;
             animation: gradientFlow 4s ease infinite;
         }
+        
+        .whatsapp-button-container {
+            text-align: center;
+            margin-top: 3rem;
+            margin-bottom: 2rem;
+        }
     </style>
 </head>
 <body>
-    <!-- Header -->
-    <header>
+    <div class="business-header">
+        <div class="container">
+            <div class="business-name-container">
+                <h1 class="business-name">Deluxe Design Creations</h1>
+                <p class="business-tagline">Premium Event Decoration & Design</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="navigation">
         <nav class="container">
-            <div class="logo">Elevate Events</div>
             <button class="mobile-menu-toggle" onclick="toggleMobileMenu()">☰</button>
             <div class="nav-container" id="navContainer">
                 <ul class="nav-links">
-                    <li><a href="#" onclick="showPage('home')" class="active">✨ Home</a></li>
-                    <li><a href="#" onclick="showPage('events')">🎉 Events</a></li>
-                    <li><a href="#" onclick="showPage('kids')">🎈 Kids Parties</a></li>
+                    <li><a href="#" onclick="showPage('home')" class="active">🏠 Home</a></li>
+                    <li><a href="#" onclick="showPage('events')">🎪 Events</a></li>
+                    <li><a href="#" onclick="showPage('kids')">🎠 Kids Parties</a></li>
                     <li><a href="#" onclick="showPage('about')">💫 About</a></li>
                     <li><a href="#" onclick="showPage('contact')">📞 Contact</a></li>
                 </ul>
             </div>
         </nav>
-    </header>
+    </div>
 
-    <!-- Main Content -->
     <main class="container">
-        <!-- Home Page -->
         <div id="home" class="page active">
             <div class="hero">
-                <h1>Elevate Events</h1>
-                <p>✨ Where Every Celebration Becomes a Masterpiece ✨</p>
-                <a href="#" onclick="showPage('contact')" class="cta-button">✨ Create Magic Today</a>
+                <h1>Welcome to Our World of Celebrations</h1>
+                <p>🎨 Crafting Beautiful Moments, One Celebration at a Time 🎨</p>
+                <a href="#" onclick="showPage('contact')" class="cta-button">🌟 Let's Create Together</a>
             </div>
 
             <div class="section-header">
@@ -589,39 +703,39 @@
 
             <div class="services">
                 <div class="service-card">
-                    <div class="service-icon">🎉</div>
-                    <h3>Event Parties</h3>
-                    <p>Elegant decorations for weddings, corporate events, birthdays, and special celebrations</p>
+                    <div class="service-icon">🎪</div>
+                    <h3>Event Celebrations</h3>
+                    <p>Beautiful decorations for weddings, corporate events, birthdays, and all your special moments</p>
                 </div>
                 <div class="service-card">
-                    <div class="service-icon">🎈</div>
-                    <h3>Kids Parties</h3>
-                    <p>Magical themed parties that bring your child's favorite characters and dreams to life</p>
+                    <div class="service-icon">🎠</div>
+                    <h3>Kids Party Magic</h3>
+                    <p>Fun, colorful themed parties that make your little ones' dreams come true with joy and laughter</p>
                 </div>
                 <div class="service-card">
                     <div class="service-icon">🎨</div>
-                    <h3>Custom Themes</h3>
-                    <p>Bespoke decoration designs tailored to your unique vision and preferences</p>
+                    <h3>Custom Designs</h3>
+                    <p>Personalized decoration designs created with love, tailored to your unique style and vision</p>
                 </div>
             </div>
 
             <hr class="divider">
 
             <div class="section-header">
-                <h2>Why Choose <span class="highlight">Elevate Events</span>?</h2>
-                <p>We bring creativity, professionalism, and magic to every celebration</p>
+                <h2>Why Choose <span class="highlight">Deluxe Design Creations</span>?</h2>
+                <p>We bring warmth, creativity, and joy to every celebration with our personal touch</p>
             </div>
 
             <div class="about-content">
                 <div class="about-text">
-                    <h3>🌟 Premium Quality</h3>
-                    <p>We use only the finest materials and decorations to ensure your event looks absolutely stunning. Every detail is carefully crafted to create the perfect atmosphere.</p>
+                    <h3>🌟 Premium Quality with Heart</h3>
+                    <p>We use only the finest materials and decorations, but more importantly, we put love and care into every detail to create the perfect atmosphere for your special day.</p>
                     
-                    <h3>🎯 Personalized Service</h3>
-                    <p>Every event is unique, and we work closely with you to understand your vision and bring it to life exactly as you imagined.</p>
+                    <h3>🤝 Personal & Friendly Service</h3>
+                    <p>Every event is unique, just like you! We work closely with you as friends, listening to your dreams and bringing them to life exactly as you imagined.</p>
                     
-                    <h3>💝 Memorable Experiences</h3>
-                    <p>Our goal is to create moments that you and your guests will remember forever. We handle all the details so you can focus on enjoying your special day.</p>
+                    <h3>💝 Joyful Experiences</h3>
+                    <p>Our goal is to create moments that fill your heart with joy and leave you with beautiful memories. We handle all the details with a smile so you can relax and enjoy your celebration.</p>
                 </div>
                 <div class="about-image">
                     🎪
@@ -629,7 +743,6 @@
             </div>
         </div>
 
-        <!-- Event Parties Page -->
         <div id="events" class="page">
             <div class="section-header">
                 <h2>Event Party Decorations</h2>
@@ -644,7 +757,6 @@
                         <p>Create the perfect fairytale wedding with elegant floral arrangements, ambient lighting, and romantic touches that make your special day unforgettable.</p>
                     </div>
                 </div>
-
                 <div class="theme-card">
                     <div class="theme-image">🌹</div>
                     <div class="theme-content">
@@ -652,7 +764,6 @@
                         <p>Bring the beauty of nature indoors with lush greenery, fresh flowers, and natural elements for a sophisticated garden-themed celebration.</p>
                     </div>
                 </div>
-
                 <div class="theme-card">
                     <div class="theme-image">✨</div>
                     <div class="theme-content">
@@ -660,7 +771,6 @@
                         <p>Add sparkle and luxury to your event with golden accents, metallic decorations, and elegant lighting for a truly glamorous atmosphere.</p>
                     </div>
                 </div>
-
                 <div class="theme-card">
                     <div class="theme-image">🎭</div>
                     <div class="theme-content">
@@ -668,7 +778,6 @@
                         <p>Step back in time with classic vintage decorations, antique touches, and timeless elegance for a sophisticated retro celebration.</p>
                     </div>
                 </div>
-
                 <div class="theme-card">
                     <div class="theme-image">🏢</div>
                     <div class="theme-content">
@@ -676,7 +785,6 @@
                         <p>Professional and polished decorations for business functions, conferences, and corporate celebrations that reflect your company's brand.</p>
                     </div>
                 </div>
-
                 <div class="theme-card">
                     <div class="theme-image">🎊</div>
                     <div class="theme-content">
@@ -684,26 +792,9 @@
                         <p>Celebrate life's big moments with custom decorations designed specifically for milestone birthdays and life achievements.</p>
                     </div>
                 </div>
-
-                <div class="theme-card">
-                    <div class="theme-image">🌊</div>
-                    <div class="theme-content">
-                        <h3>Beach Theme</h3>
-                        <p>Bring the seaside to your celebration with coastal colors, nautical elements, and ocean-inspired decorations.</p>
-                    </div>
-                </div>
-
-                <div class="theme-card">
-                    <div class="theme-image">🎄</div>
-                    <div class="theme-content">
-                        <h3>Holiday Celebrations</h3>
-                        <p>Festive decorations for Christmas, New Year, and other holiday celebrations that capture the spirit of the season.</p>
-                    </div>
-                </div>
             </div>
         </div>
 
-        <!-- Kids Parties Page -->
         <div id="kids" class="page">
             <div class="section-header">
                 <h2>Kids Party Themes</h2>
@@ -712,217 +803,159 @@
 
             <div class="theme-grid">
                 <div class="theme-card">
-                    <div class="theme-image">👑</div>
+                    <div class="theme-image">🦄</div>
                     <div class="theme-content">
-                        <h3>Princess Party</h3>
-                        <p>Transform your space into a royal castle with pink and gold decorations, crowns, and magical princess elements that every little girl dreams of.</p>
+                        <h3>Unicorn Dreams</h3>
+                        <p>Enter a magical world of rainbows, sparkles, and unicorns with pastel colors and enchanting decorations that make dreams come true.</p>
                     </div>
                 </div>
-
                 <div class="theme-card">
                     <div class="theme-image">🦸</div>
                     <div class="theme-content">
                         <h3>Superhero Adventure</h3>
-                        <p>Action-packed decorations featuring favorite superheroes with bold colors, cityscape backdrops, and heroic symbols.</p>
+                        <p>Transform your party into an action-packed superhero headquarters with bold colors, comic book elements, and heroic decorations.</p>
                     </div>
                 </div>
-
                 <div class="theme-card">
-                    <div class="theme-image">🦄</div>
+                    <div class="theme-image">🎈</div>
                     <div class="theme-content">
-                        <h3>Unicorn Magic</h3>
-                        <p>Create a magical wonderland with rainbow colors, sparkles, and enchanting unicorn decorations that bring fantasy to life.</p>
+                        <h3>Circus Fun</h3>
+                        <p>Create a festive and vibrant circus atmosphere with balloons, streamers, and playful designs for a day full of fun and laughter.</p>
                     </div>
                 </div>
-
                 <div class="theme-card">
                     <div class="theme-image">🦖</div>
                     <div class="theme-content">
-                        <h3>Dinosaur Adventure</h3>
-                        <p>Journey back to prehistoric times with realistic dinosaur decorations, jungle elements, and archaeological dig setups.</p>
+                        <h3>Dino Discovery</h3>
+                        <p>Explore a prehistoric world with dinosaur-themed decorations, fossil-digging games, and jungle foliage that will thrill any young adventurer.</p>
                     </div>
                 </div>
-
                 <div class="theme-card">
-                    <div class="theme-image">🚗</div>
+                    <div class="theme-image">🚀</div>
                     <div class="theme-content">
-                        <h3>Cars & Racing</h3>
-                        <p>Speed into fun with racing-themed decorations, checkered flags, and favorite car characters for little speed demons.</p>
+                        <h3>Outer Space Mission</h3>
+                        <p>Blast off into a galaxy of fun with space-themed decorations, cosmic balloons, and alien figures for an out-of-this-world experience.</p>
                     </div>
                 </div>
-
                 <div class="theme-card">
-                    <div class="theme-image">🧚</div>
+                    <div class="theme-image">👑</div>
                     <div class="theme-content">
-                        <h3>Fairy Garden</h3>
-                        <p>Enchanting forest scenes with flowers, butterflies, and magical fairy elements creating a whimsical garden party.</p>
-                    </div>
-                </div>
-
-                <div class="theme-card">
-                    <div class="theme-image">🏴‍☠️</div>
-                    <div class="theme-content">
-                        <h3>Pirate Adventure</h3>
-                        <p>Set sail for adventure with pirate ships, treasure chests, maps, and nautical decorations for brave little buccaneers.</p>
-                    </div>
-                </div>
-
-                <div class="theme-card">
-                    <div class="theme-image">🎮</div>
-                    <div class="theme-content">
-                        <h3>Gaming Party</h3>
-                        <p>Level up the fun with video game-inspired decorations, pixel art, and gaming elements for tech-savvy kids.</p>
-                    </div>
-                </div>
-
-                <div class="theme-card">
-                    <div class="theme-image">🎪</div>
-                    <div class="theme-content">
-                        <h3>Circus Spectacular</h3>
-                        <p>Step right up to the greatest show with colorful circus decorations, carnival games, and big top excitement.</p>
-                    </div>
-                </div>
-
-                <div class="theme-card">
-                    <div class="theme-image">🌙</div>
-                    <div class="theme-content">
-                        <h3>Space Adventure</h3>
-                        <p>Blast off to the stars with space-themed decorations, planets, rockets, and astronaut elements for future space explorers.</p>
+                        <h3>Princess Kingdom</h3>
+                        <p>Grant your little one their wish for a royal celebration with princess-themed decor, castles, and magical touches that create a fairytale setting.</p>
                     </div>
                 </div>
             </div>
         </div>
-
-        <!-- About Page -->
+        
         <div id="about" class="page">
             <div class="section-header">
-                <h2>About Elevate Events</h2>
-                <p>Your trusted partner in creating magical moments and unforgettable celebrations</p>
+                <h2>Our Story & Our Passion</h2>
+                <p>We are a small business dedicated to bringing your event visions to life with a personal touch</p>
             </div>
 
             <div class="about-content">
-                <div class="about-text">
-                    <h3>Our Story</h3>
-                    <p>Welcome to Elevate Events, where dreams come to life through the art of decoration. Founded with a passion for creating magical experiences, we specialize in transforming ordinary spaces into extraordinary celebrations.</p>
-                    
-                    <p>Led by Janesha Bachen, our team brings years of experience and creativity to every event. We believe that every celebration deserves to be special, whether it's an elegant wedding, a corporate gathering, or a child's birthday party.</p>
-                    
-                    <h3>Our Mission</h3>
-                    <p>To create enchanting experiences that exceed expectations and leave lasting memories. We are committed to bringing your vision to life with attention to detail, creativity, and professionalism.</p>
-                    
-                    <h3>What Makes Us Special</h3>
-                    <p>• <strong>Personalized Service:</strong> Every event is unique, and we tailor our approach to your specific needs and preferences.</p>
-                    <p>• <strong>Quality Materials:</strong> We use only premium decorations and materials to ensure your event looks absolutely stunning.</p>
-                    <p>• <strong>Creative Designs:</strong> Our team stays current with the latest trends while creating timeless, memorable designs.</p>
-                    <p>• <strong>Stress-Free Experience:</strong> We handle all the details so you can relax and enjoy your special day.</p>
-                </div>
                 <div class="about-image">
-                    🎨
+                    💖
+                </div>
+                <div class="about-text">
+                    <p>Deluxe Design Creations was born from a simple idea: to make every celebration feel special, personal, and full of heart. We believe that decorations are more than just a setup; they are a key part of the memory-making process.</p>
+                    <p>Our journey began with a love for creativity and a passion for organizing beautiful events. Over the years, we've had the joy of working with countless families and businesses, transforming spaces and bringing smiles to faces. We take pride in our meticulous attention to detail and our ability to create unique, custom designs that reflect your individual style.</p>
+                    <p>We are a small, family-run business, and we treat every client like family. Your dreams are our inspiration, and we're committed to delivering a friendly, stress-free experience from the first consultation to the final reveal.</p>
                 </div>
             </div>
 
             <hr class="divider">
 
             <div class="section-header">
-                <h2>Our Process</h2>
-                <p>From consultation to celebration, we make the journey seamless and enjoyable</p>
+                <h2>Meet the Creators</h2>
+                <p>We're here to help you celebrate!</p>
             </div>
-
+            
             <div class="services">
                 <div class="service-card">
-                    <div class="service-icon">💬</div>
-                    <h3>1. Consultation</h3>
-                    <p>We start with a detailed discussion about your vision, preferences, and budget to understand exactly what you're looking for.</p>
+                    <div class="service-icon">👩‍🎨</div>
+                    <h3>Our Lead Designer</h3>
+                    <p>The creative force behind every beautiful setup. With an eye for detail and a passion for design, she ensures every event is a masterpiece.</p>
                 </div>
                 <div class="service-card">
-                    <div class="service-icon">✏️</div>
-                    <h3>2. Design & Planning</h3>
-                    <p>Our team creates a custom design plan and mood board, incorporating your ideas with our creative expertise.</p>
+                    <div class="service-icon">🤝</div>
+                    <h3>Client Relations</h3>
+                    <p>Your main point of contact. He's here to listen to your ideas, answer your questions, and guide you through the process with a smile.</p>
                 </div>
                 <div class="service-card">
-                    <div class="service-icon">🛠️</div>
-                    <h3>3. Setup & Execution</h3>
-                    <p>On event day, we arrive early to transform your space, ensuring every detail is perfect before your guests arrive.</p>
+                    <div class="service-icon">✨</div>
+                    <h3>The Magic Team</h3>
+                    <p>Our dedicated team works tirelessly behind the scenes to bring your vision to life, ensuring everything is perfect for your special day.</p>
                 </div>
             </div>
         </div>
 
-        <!-- Contact Page -->
         <div id="contact" class="page">
-            <div class="section-header">
-                <h2>Get In Touch</h2>
-                <p>Ready to make your event magical? Contact us today for a free consultation!</p>
-            </div>
-
-            <div class="contact-info">
-                <div class="contact-card">
-                    <div class="contact-icon">👤</div>
-                    <h3>Janesha Bachen</h3>
-                    <p>Event Decoration Specialist</p>
-                    <p>Your dedicated partner in creating magical celebrations</p>
-                </div>
-
-                <div class="contact-card">
-                    <div class="contact-icon">📱</div>
-                    <h3>Phone</h3>
-                    <p><strong>0732953101</strong></p>
-                    <p>Call or WhatsApp for immediate assistance</p>
-                </div>
-
-                <div class="contact-card">
-                    <div class="contact-icon">✉️</div>
-                    <h3>Email</h3>
-                    <p><strong>Janesha25pather@gmail.com</strong></p>
-                    <p>Send us your event details and questions</p>
-                </div>
-
-                <div class="contact-card">
-                    <div class="contact-icon">📍</div>
-                    <h3>Location</h3>
-                    <p><strong>4 UBA Road</strong></p>
-                    <p>Maidstone Village, Tongaat</p>
-                    <p>KwaZulu-Natal, 4400</p>
-                    <p>South Africa</p>
-                </div>
-            </div>
-
-            <hr class="divider">
-
             <div class="section-header">
                 <h2>Let's Start Planning!</h2>
                 <p>Contact us today to discuss your event and receive a personalized quote</p>
             </div>
+            
+            <div class="services">
+                <div class="service-card">
+                    <div class="contact-icon">
+                        <i class="fas fa-user-circle"></i>
+                    </div>
+                    <h3>Janesha Bachen</h3>
+                    <p>Event Decoration Specialist<br>Your dedicated partner in creating magical celebrations</p>
+                </div>
+                <div class="service-card">
+                    <div class="contact-icon">
+                        <i class="fab fa-whatsapp"></i>
+                    </div>
+                    <h3>Phone</h3>
+                    <p>0717331694<br>Call or WhatsApp for immediate assistance</p>
+                </div>
+                <div class="service-card">
+                    <div class="contact-icon">
+                        <i class="far fa-envelope"></i>
+                    </div>
+                    <h3>Email</h3>
+                    <p>Janesha25pather@gmail.com<br>Send us your event details and questions</p>
+                </div>
+                <div class="service-card">
+                    <div class="contact-icon">
+                        <i class="fas fa-map-marker-alt"></i>
+                    </div>
+                    <h3>Location</h3>
+                    <p>4 UBA Road<br>Maidstone Village, Tongaat<br>KwaZulu-Natal, 4400<br>South Africa</p>
+                </div>
+            </div>
+
+            <hr class="divider">
 
             <div class="about-content">
                 <div class="about-text">
-                    <h3>🎯 Free Consultation</h3>
+                    <h3>✅ Free Consultation</h3>
                     <p>We offer complimentary consultations to discuss your event vision, theme preferences, and budget. This helps us create the perfect plan for your special day.</p>
                     
                     <h3>📅 Flexible Scheduling</h3>
                     <p>We understand that planning events can be stressful, so we work around your schedule to make the process as convenient as possible.</p>
                     
+                    <h3>⚡️ Quick Response</h3>
+                    <p>We pride ourselves on prompt communication. Expect to hear back from us within 24 hours of your initial contact.</p>
+                    
                     <h3>💰 Competitive Pricing</h3>
                     <p>Quality doesn't have to break the bank. We offer competitive pricing with packages to suit various budgets without compromising on quality.</p>
-                    
-                    <h3>⚡ Quick Response</h3>
-                    <p>We pride ourselves on prompt communication. Expect to hear back from us within 24 hours of your initial contact.</p>
-
-                    <div style="margin-top: 2rem; text-align: center;">
-                        <a href="https://wa.me/27732953101?text=Hi! I'm interested in your decoration services for my event." class="cta-button">
-                            WhatsApp Us Now! 💬
-                        </a>
-                    </div>
                 </div>
                 <div class="about-image">
-                    📞
+                    <i class="fas fa-phone-volume"></i>
                 </div>
+            </div>
+            
+            <div class="whatsapp-button-container">
+                <a href="https://wa.me/27717331694" class="cta-button" target="_blank">WhatsApp Us Now!</a>
             </div>
         </div>
     </main>
 
-    <!-- WhatsApp Float Button -->
-    <a href="https://wa.me/27732953101?text=Hi! I'm interested in your decoration services for my event." class="whatsapp-float" target="_blank">
-        💬
+    <a href="https://wa.me/27717331694" class="whatsapp-float" target="_blank">
+        <img src="https://upload.wikimedia.org/wikipedia/commons/6/6b/WhatsApp.svg" alt="WhatsApp" />
     </a>
 
     <script>
@@ -930,59 +963,35 @@
             // Hide all pages
             const pages = document.querySelectorAll('.page');
             pages.forEach(page => page.classList.remove('active'));
-            
-            // Show selected page
-            document.getElementById(pageId).classList.add('active');
-            
-            // Update active nav link
+
+            // Show the selected page
+            const activePage = document.getElementById(pageId);
+            if (activePage) {
+                activePage.classList.add('active');
+            }
+
+            // Update active link in navigation
             const navLinks = document.querySelectorAll('.nav-links a');
-            navLinks.forEach(link => link.classList.remove('active'));
-            event.target.classList.add('active');
-            
-            // Close mobile menu if open
-            document.getElementById('navContainer').classList.remove('active');
-            
-            // Scroll to top
-            window.scrollTo(0, 0);
+            navLinks.forEach(link => {
+                link.classList.remove('active');
+                if (link.getAttribute('onclick').includes("'" + pageId + "'")) {
+                    link.classList.add('active');
+                }
+            });
+
+            // Hide mobile menu after selection
+            const navContainer = document.getElementById('navContainer');
+            if (navContainer) {
+                navContainer.classList.remove('active');
+            }
         }
 
         function toggleMobileMenu() {
             const navContainer = document.getElementById('navContainer');
-            navContainer.classList.toggle('active');
+            if (navContainer) {
+                navContainer.classList.toggle('active');
+            }
         }
-
-        // Smooth scroll for internal links
-        document.addEventListener('DOMContentLoaded', function() {
-            // Add smooth scrolling animation
-            const style = document.createElement('style');
-            style.textContent = `
-                html {
-                    scroll-behavior: smooth;
-                }
-            `;
-            document.head.appendChild(style);
-
-            // Header scroll effect
-            window.addEventListener('scroll', function() {
-                const header = document.querySelector('header');
-                if (window.scrollY > 50) {
-                    header.style.background = 'rgba(255, 255, 255, 0.99)';
-                    header.style.boxShadow = '0 2px 24px rgba(0, 0, 0, 0.12)';
-                } else {
-                    header.style.background = 'rgba(255, 255, 255, 0.98)';
-                    header.style.boxShadow = '0 2px 20px rgba(0, 0, 0, 0.1)';
-                }
-            });
-
-            // Close mobile menu when clicking outside
-            document.addEventListener('click', function(e) {
-                const navContainer = document.getElementById('navContainer');
-                const mobileToggle = document.querySelector('.mobile-menu-toggle');
-                
-                if (!navContainer.contains(e.target) && !mobileToggle.contains(e.target)) {
-                    navContainer.classList.remove('active');
-                }
-            });
-        });
     </script>
 </body>
+</html>
