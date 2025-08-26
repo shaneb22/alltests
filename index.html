@@ -26,14 +26,13 @@
             padding: 0 20px;
         }
 
-        /* Business Name Header - Refined for elegant look */
+        /* Business Name Header - Changed to static */
         .business-header {
             background: rgba(255, 255, 255, 0.95);
             backdrop-filter: blur(20px);
             border-bottom: 2px solid #b19cd9;
-            position: fixed;
+            position: static;
             width: 100%;
-            top: 0;
             z-index: 1000;
             box-shadow: 0 4px 20px rgba(177, 156, 217, 0.2);
             padding: 1.5rem 0;
@@ -105,14 +104,13 @@
             }
         }
 
-        /* Navigation - Moved below business name */
+        /* Navigation - Changed to static */
         .navigation {
             background: rgba(255, 255, 255, 0.95);
             backdrop-filter: blur(20px);
             border-bottom: 1px solid rgba(0, 0, 0, 0.05);
-            position: fixed;
+            position: static;
             width: 100%;
-            top: 140px; /* Adjusted to be responsive to the header size */
             z-index: 999;
             box-shadow: 0 2px 15px rgba(0, 0, 0, 0.08);
             padding: 0.8rem 0;
@@ -190,13 +188,13 @@
             transform: translateY(-1px);
         }
 
-        /* Main Content - Adjusted for new header height */
+        /* Main Content - Reset margin for static positioning */
         main {
-            margin-top: 200px; /* Increased to accommodate larger header */
+            margin-top: 0;
             background: rgba(255, 255, 255, 0.95);
             backdrop-filter: blur(20px);
             border-radius: 20px 20px 0 0;
-            min-height: calc(100vh - 200px);
+            min-height: 100vh;
             box-shadow: 0 -10px 40px rgba(31, 38, 135, 0.2);
             border: 1px solid rgba(255, 255, 255, 0.18);
         }
@@ -526,13 +524,13 @@
                 padding: 1rem 0;
             }
             
-            /* Adjusted for proper spacing on mobile */
+            /* Mobile adjustments for static positioning */
             .navigation {
-                top: 100px;
+                position: static;
             }
 
             main {
-                margin-top: 160px;
+                margin-top: 0;
             }
 
             .nav-container {
