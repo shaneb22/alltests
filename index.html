@@ -15,18 +15,9 @@
         body {
             font-family: 'Inter', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             line-height: 1.4;
-            color: #2d3748;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 50%, #f093fb 100%);
+            color: #4a4a6a;
+            background: linear-gradient(135deg, #e8e3f0 0%, #f0edf5 50%, #f5f3f8 100%);
             min-height: 100vh;
-            animation: gradientShift 12s ease infinite;
-        }
-
-        @keyframes gradientShift {
-            0% { background: linear-gradient(135deg, #667eea 0%, #764ba2 50%, #f093fb 100%); }
-            25% { background: linear-gradient(135deg, #f093fb 0%, #f5576c 50%, #4facfe 100%); }
-            50% { background: linear-gradient(135deg, #4facfe 0%, #00f2fe 50%, #43e97b 100%); }
-            75% { background: linear-gradient(135deg, #43e97b 0%, #38f9d7 50%, #667eea 100%); }
-            100% { background: linear-gradient(135deg, #667eea 0%, #764ba2 50%, #f093fb 100%); }
         }
 
         .container {
@@ -35,17 +26,16 @@
             padding: 0 20px;
         }
 
-        /* Business Name Header - NEW FOCAL POINT */
+        /* Business Name Header - Refined for elegant look */
         .business-header {
-            background: rgba(255, 255, 255, 0.98);
-            backdrop-filter: blur(25px);
-            border-bottom: 3px solid transparent;
-            border-image: linear-gradient(45deg, #ff6b6b, #4ecdc4, #45b7d1, #96ceb4) 1;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(20px);
+            border-bottom: 2px solid #b19cd9;
             position: fixed;
             width: 100%;
             top: 0;
             z-index: 1000;
-            box-shadow: 0 5px 30px rgba(0, 0, 0, 0.15);
+            box-shadow: 0 4px 20px rgba(177, 156, 217, 0.2);
             padding: 1.5rem 0;
         }
 
@@ -55,69 +45,53 @@
         }
 
         .business-name {
-            font-size: 3.5rem;
-            font-weight: 900;
-            letter-spacing: -1px;
-            background: linear-gradient(45deg, #ff6b6b, #4ecdc4, #45b7d1, #96ceb4, #ffeaa7);
-            background-size: 300% 300%;
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-            animation: gradientFlow 4s ease infinite, businessPulse 3s ease-in-out infinite;
-            text-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+            font-size: 3rem;
+            font-weight: 700;
+            letter-spacing: -0.5px;
+            color: #5d4e75;
+            text-shadow: 0 2px 10px rgba(177, 156, 217, 0.3);
             position: relative;
             display: inline-block;
         }
 
         .business-name::before {
-            content: '✨';
+            content: '🎈';
             position: absolute;
             left: -60px;
             top: 50%;
             transform: translateY(-50%);
-            font-size: 2.5rem;
-            animation: sparkle 2s ease-in-out infinite;
+            font-size: 2rem;
+            animation: gentleFloat 3s ease-in-out infinite;
         }
 
         .business-name::after {
-            content: '✨';
+            content: '🎈';
             position: absolute;
             right: -60px;
             top: 50%;
             transform: translateY(-50%);
-            font-size: 2.5rem;
-            animation: sparkle 2s ease-in-out infinite 1s;
+            font-size: 2rem;
+            animation: gentleFloat 3s ease-in-out infinite 1.5s;
         }
 
         .business-tagline {
-            font-size: 1.2rem;
-            color: #666;
+            font-size: 1.1rem;
+            color: #7a6b8a;
             margin-top: 0.5rem;
-            font-weight: 500;
-            letter-spacing: 0.5px;
-            animation: fadeInUp 1s ease 0.5s both;
+            font-weight: 400;
+            font-style: italic;
+            letter-spacing: 0.3px;
         }
 
-        @keyframes businessPulse {
-            0%, 100% { transform: scale(1); }
-            50% { transform: scale(1.02); }
-        }
-
-        @keyframes sparkle {
+        @keyframes gentleFloat {
             0%, 100% { 
-                transform: translateY(-50%) rotate(0deg) scale(1);
-                opacity: 0.7;
+                transform: translateY(-50%) translateX(0px);
+                opacity: 0.8;
             }
             50% { 
-                transform: translateY(-50%) rotate(180deg) scale(1.2);
+                transform: translateY(-50%) translateX(3px);
                 opacity: 1;
             }
-        }
-
-        @keyframes gradientFlow {
-            0% { background-position: 0% 50%; }
-            50% { background-position: 100% 50%; }
-            100% { background-position: 0% 50%; }
         }
 
         @keyframes fadeInUp {
@@ -191,8 +165,8 @@
 
         .nav-links a.active {
             color: #ffffff;
-            background: linear-gradient(135deg, #667eea, #764ba2);
-            box-shadow: 0 4px 12px rgba(102, 126, 234, 0.25);
+            background: #b19cd9;
+            box-shadow: 0 4px 12px rgba(177, 156, 217, 0.25);
         }
 
         /* Mobile menu toggle */
@@ -248,30 +222,27 @@
             }
         }
 
-        /* Hero Section - Simplified since business name is now prominent */
+        /* Hero Section - Elegant and refined */
         .hero {
             text-align: center;
             padding: 3rem 0;
-            background: linear-gradient(135deg, rgba(255, 107, 107, 0.1), rgba(78, 205, 196, 0.1), rgba(69, 183, 209, 0.1));
+            background: linear-gradient(135deg, rgba(177, 156, 217, 0.1), rgba(240, 237, 245, 0.8));
             border-radius: 20px;
             margin: 2rem 0;
-            border: 1px solid rgba(255, 255, 255, 0.3);
+            border: 2px solid rgba(177, 156, 217, 0.2);
             backdrop-filter: blur(10px);
         }
 
         .hero h1 {
             font-size: 2.5rem;
             margin-bottom: 1rem;
-            background: linear-gradient(45deg, #ff6b6b, #4ecdc4, #45b7d1, #96ceb4);
-            background-size: 200% 200%;
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            animation: gradientFlow 4s ease infinite, slideInUp 1s ease;
+            color: #5d4e75;
+            animation: slideInUp 1s ease;
         }
 
         .hero p {
             font-size: 1.2rem;
-            color: #666;
+            color: #7a6b8a;
             margin-bottom: 2rem;
             animation: slideInUp 1s ease 0.2s both;
         }
@@ -279,20 +250,20 @@
         .cta-button {
             display: inline-block;
             padding: 15px 30px;
-            background: linear-gradient(45deg, #ff6b6b, #4ecdc4, #45b7d1);
-            background-size: 200% 200%;
+            background: #b19cd9;
             color: white;
             text-decoration: none;
             border-radius: 50px;
-            font-weight: bold;
+            font-weight: 600;
             transition: all 0.3s ease;
-            animation: slideInUp 1s ease 0.4s both, gradientFlow 3s ease infinite;
-            box-shadow: 0 8px 25px rgba(255, 107, 107, 0.3);
+            animation: slideInUp 1s ease 0.4s both;
+            box-shadow: 0 8px 25px rgba(177, 156, 217, 0.3);
         }
 
         .cta-button:hover {
             transform: translateY(-3px) scale(1.05);
-            box-shadow: 0 15px 35px rgba(255, 107, 107, 0.4);
+            background: #a088c7;
+            box-shadow: 0 15px 35px rgba(177, 156, 217, 0.4);
         }
 
         @keyframes slideInUp {
@@ -332,9 +303,7 @@
             left: 0;
             right: 0;
             height: 3px;
-            background: linear-gradient(45deg, #ff6b6b, #4ecdc4, #45b7d1, #96ceb4, #ffeaa7);
-            background-size: 200% 200%;
-            animation: gradientFlow 3s ease infinite;
+            background: #b19cd9;
         }
 
         .theme-card:hover {
@@ -345,8 +314,7 @@
         .theme-image {
             width: 100%;
             height: 200px;
-            background: linear-gradient(45deg, #ff6b6b, #4ecdc4, #45b7d1);
-            background-size: 200% 200%;
+            background: linear-gradient(135deg, #b19cd9, #d4c4e8);
             display: flex;
             align-items: center;
             justify-content: center;
@@ -354,7 +322,6 @@
             font-size: 3rem;
             position: relative;
             overflow: hidden;
-            animation: gradientFlow 4s ease infinite;
         }
 
         .theme-image::before {
@@ -409,7 +376,7 @@
             left: 0;
             right: 0;
             bottom: 0;
-            background: linear-gradient(45deg, #ff6b6b, #4ecdc4, #45b7d1, #96ceb4);
+            background: #b19cd9;
             opacity: 0;
             transition: opacity 0.3s ease;
             z-index: -1;
@@ -448,16 +415,14 @@
 
         .about-image {
             height: 300px;
-            background: linear-gradient(45deg, #ff6b6b, #4ecdc4, #45b7d1, #96ceb4);
-            background-size: 200% 200%;
+            background: linear-gradient(135deg, #b19cd9, #d4c4e8);
             border-radius: 20px;
             display: flex;
             align-items: center;
             justify-content: center;
             color: white;
             font-size: 4rem;
-            animation: gradientFlow 5s ease infinite;
-            box-shadow: 0 15px 35px rgba(255, 107, 107, 0.3);
+            box-shadow: 0 15px 35px rgba(177, 156, 217, 0.3);
         }
 
         /* Contact Section */
@@ -487,22 +452,18 @@
             left: 0;
             right: 0;
             height: 3px;
-            background: linear-gradient(45deg, #ff6b6b, #4ecdc4, #45b7d1);
-            background-size: 200% 200%;
-            animation: gradientFlow 3s ease infinite;
+            background: #b19cd9;
         }
 
         .contact-card:hover {
             transform: translateY(-8px) scale(1.02);
-            box-shadow: 0 20px 40px rgba(255, 107, 107, 0.2);
+            box-shadow: 0 20px 40px rgba(177, 156, 217, 0.2);
         }
 
         .contact-icon {
             font-size: 2.5rem;
             margin-bottom: 1rem;
-            background: linear-gradient(45deg, #ff6b6b, #4ecdc4);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
+            color: #b19cd9;
         }
 
         /* WhatsApp Float Button */
@@ -536,16 +497,12 @@
         .section-header h2 {
             font-size: 2.5rem;
             margin-bottom: 1rem;
-            background: linear-gradient(45deg, #ff6b6b, #4ecdc4, #45b7d1, #96ceb4);
-            background-size: 200% 200%;
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            animation: gradientFlow 4s ease infinite;
+            color: #5d4e75;
         }
 
         .section-header p {
             font-size: 1.1rem;
-            color: #666;
+            color: #7a6b8a;
             max-width: 600px;
             margin: 0 auto;
         }
@@ -638,22 +595,16 @@
 
         /* Additional Styling */
         .highlight {
-            background: linear-gradient(45deg, #ff6b6b, #4ecdc4, #45b7d1);
-            background-size: 200% 200%;
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
+            color: #5d4e75;
             font-weight: bold;
-            animation: gradientFlow 3s ease infinite;
         }
 
         .divider {
             height: 3px;
-            background: linear-gradient(45deg, #ff6b6b, #4ecdc4, #45b7d1, #96ceb4, #ffeaa7);
-            background-size: 200% 200%;
+            background: #b19cd9;
             border: none;
             border-radius: 3px;
             margin: 2rem 0;
-            animation: gradientFlow 4s ease infinite;
         }
         
         .whatsapp-button-container {
@@ -891,107 +842,3 @@
         </div>
 
         <div id="contact" class="page">
-            <div class="section-header">
-                <h2>Let's Start Planning!</h2>
-                <p>Contact us today to discuss your event and receive a personalized quote</p>
-            </div>
-            
-            <div class="services">
-                <div class="service-card">
-                    <div class="contact-icon">
-                        <i class="fas fa-user-circle"></i>
-                    </div>
-                    <h3>Janesha Bachen</h3>
-                    <p>Event Decoration Specialist<br>Your dedicated partner in creating magical celebrations</p>
-                </div>
-                <div class="service-card">
-                    <div class="contact-icon">
-                        <i class="fab fa-whatsapp"></i>
-                    </div>
-                    <h3>Phone</h3>
-                    <p>0717331694<br>Call or WhatsApp for immediate assistance</p>
-                </div>
-                <div class="service-card">
-                    <div class="contact-icon">
-                        <i class="far fa-envelope"></i>
-                    </div>
-                    <h3>Email</h3>
-                    <p>Janesha25pather@gmail.com<br>Send us your event details and questions</p>
-                </div>
-                <div class="service-card">
-                    <div class="contact-icon">
-                        <i class="fas fa-map-marker-alt"></i>
-                    </div>
-                    <h3>Location</h3>
-                    <p>4 UBA Road<br>Maidstone Village, Tongaat<br>KwaZulu-Natal, 4400<br>South Africa</p>
-                </div>
-            </div>
-
-            <hr class="divider">
-
-            <div class="about-content">
-                <div class="about-text">
-                    <h3>✅ Free Consultation</h3>
-                    <p>We offer complimentary consultations to discuss your event vision, theme preferences, and budget. This helps us create the perfect plan for your special day.</p>
-                    
-                    <h3>📅 Flexible Scheduling</h3>
-                    <p>We understand that planning events can be stressful, so we work around your schedule to make the process as convenient as possible.</p>
-                    
-                    <h3>⚡️ Quick Response</h3>
-                    <p>We pride ourselves on prompt communication. Expect to hear back from us within 24 hours of your initial contact.</p>
-                    
-                    <h3>💰 Competitive Pricing</h3>
-                    <p>Quality doesn't have to break the bank. We offer competitive pricing with packages to suit various budgets without compromising on quality.</p>
-                </div>
-                <div class="about-image">
-                    <i class="fas fa-phone-volume"></i>
-                </div>
-            </div>
-            
-            <div class="whatsapp-button-container">
-                <a href="https://wa.me/27717331694" class="cta-button" target="_blank">WhatsApp Us Now!</a>
-            </div>
-        </div>
-    </main>
-
-    <a href="https://wa.me/27717331694" class="whatsapp-float" target="_blank">
-        <img src="https://upload.wikimedia.org/wikipedia/commons/6/6b/WhatsApp.svg" alt="WhatsApp" />
-    </a>
-
-    <script>
-        function showPage(pageId) {
-            // Hide all pages
-            const pages = document.querySelectorAll('.page');
-            pages.forEach(page => page.classList.remove('active'));
-
-            // Show the selected page
-            const activePage = document.getElementById(pageId);
-            if (activePage) {
-                activePage.classList.add('active');
-            }
-
-            // Update active link in navigation
-            const navLinks = document.querySelectorAll('.nav-links a');
-            navLinks.forEach(link => {
-                link.classList.remove('active');
-                if (link.getAttribute('onclick').includes("'" + pageId + "'")) {
-                    link.classList.add('active');
-                }
-            });
-
-            // Hide mobile menu after selection
-            const navContainer = document.getElementById('navContainer');
-            if (navContainer) {
-                navContainer.classList.remove('active');
-            }
-        }
-
-        function toggleMobileMenu() {
-            const navContainer = document.getElementById('navContainer');
-            if (navContainer) {
-                navContainer.classList.toggle('active');
-            }
-        }
-    </script>
-</body>
-</html>
