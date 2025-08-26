@@ -840,3 +840,107 @@
         </div>
 
         <div id="contact" class="page">
+            <div class="section-header">
+                <h2>Let's Start Planning!</h2>
+                <p>Contact us today to discuss your event and receive a personalized quote</p>
+            </div>
+            
+            <div class="services">
+                <div class="service-card">
+                    <div class="contact-icon">
+                        <i class="fas fa-user-circle"></i>
+                    </div>
+                    <h3>Janesha Bachen</h3>
+                    <p>Event Decoration Specialist<br>Your dedicated partner in creating magical celebrations</p>
+                </div>
+                <div class="service-card">
+                    <div class="contact-icon">
+                        <i class="fab fa-whatsapp"></i>
+                    </div>
+                    <h3>Phone</h3>
+                    <p>0717331694<br>Call or WhatsApp for immediate assistance</p>
+                </div>
+                <div class="service-card">
+                    <div class="contact-icon">
+                        <i class="far fa-envelope"></i>
+                    </div>
+                    <h3>Email</h3>
+                    <p>Janesha25pather@gmail.com<br>Send us your event details and questions</p>
+                </div>
+                <div class="service-card">
+                    <div class="contact-icon">
+                        <i class="fas fa-map-marker-alt"></i>
+                    </div>
+                    <h3>Location</h3>
+                    <p>4 UBA Road<br>Maidstone Village, Tongaat<br>KwaZulu-Natal, 4400<br>South Africa</p>
+                </div>
+            </div>
+
+            <hr class="divider">
+
+            <div class="about-content">
+                <div class="about-text">
+                    <h3>✅ Free Consultation</h3>
+                    <p>We offer complimentary consultations to discuss your event vision, theme preferences, and budget. This helps us create the perfect plan for your special day.</p>
+                    
+                    <h3>📅 Flexible Scheduling</h3>
+                    <p>We understand that planning events can be stressful, so we work around your schedule to make the process as convenient as possible.</p>
+                    
+                    <h3>⚡️ Quick Response</h3>
+                    <p>We pride ourselves on prompt communication. Expect to hear back from us within 24 hours of your initial contact.</p>
+                    
+                    <h3>💰 Competitive Pricing</h3>
+                    <p>Quality doesn't have to break the bank. We offer competitive pricing with packages to suit various budgets without compromising on quality.</p>
+                </div>
+                <div class="about-image">
+                    <i class="fas fa-phone-volume"></i>
+                </div>
+            </div>
+            
+            <div class="whatsapp-button-container">
+                <a href="https://wa.me/27717331694" class="cta-button" target="_blank">WhatsApp Us Now!</a>
+            </div>
+        </div>
+    </main>
+
+    <a href="https://wa.me/27717331694" class="whatsapp-float" target="_blank">
+        <img src="https://upload.wikimedia.org/wikipedia/commons/6/6b/WhatsApp.svg" alt="WhatsApp" />
+    </a>
+
+    <script>
+        function showPage(pageId) {
+            // Hide all pages
+            const pages = document.querySelectorAll('.page');
+            pages.forEach(page => page.classList.remove('active'));
+
+            // Show the selected page
+            const activePage = document.getElementById(pageId);
+            if (activePage) {
+                activePage.classList.add('active');
+            }
+
+            // Update active link in navigation
+            const navLinks = document.querySelectorAll('.nav-links a');
+            navLinks.forEach(link => {
+                link.classList.remove('active');
+                if (link.getAttribute('onclick').includes("'" + pageId + "'")) {
+                    link.classList.add('active');
+                }
+            });
+
+            // Hide mobile menu after selection
+            const navContainer = document.getElementById('navContainer');
+            if (navContainer) {
+                navContainer.classList.remove('active');
+            }
+        }
+
+        function toggleMobileMenu() {
+            const navContainer = document.getElementById('navContainer');
+            if (navContainer) {
+                navContainer.classList.toggle('active');
+            }
+        }
+    </script>
+</body>
+</html>
