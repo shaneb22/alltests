@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Deluxe Design Creations - Quote Platform</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/dom-to-image/2.6.0/dom-to-image.min.js"></script>
     <style>
         * {
             margin: 0;
@@ -285,7 +286,7 @@
     </style>
 </head>
 <body>
-    <div class="container">
+    <div class="container" id="quote-container">
         <div class="header">
             <div class="balloons">
                 <div class="balloon"></div>
@@ -452,18 +453,28 @@
             <div class="action-buttons">
                 <button type="button" class="btn btn-primary" onclick="previewQuote()">Preview Quote</button>
                 <button type="button" class="btn btn-secondary" onclick="exportToPDF()">Export to PDF</button>
+                <button type="button" class="btn btn-primary" onclick="exportToJPG()">Export to JPG</button>
             </div>
         </div>
     </div>
 
     <script>
-        // Set today's date as default
-        document.getElementById('quoteDate').value = new Date().toISOString().split('T')[0];
-        
-        // Set valid until date (30 days from today)
-        let validDate = new Date();
-        validDate.setDate(validDate.getDate() + 30);
-        document.getElementById('validUntil').value = validDate.toISOString().split('T')[0];
+        // Initialize the form
+        window.onload = function() {
+            // Set today's date as default
+            document.getElementById('quoteDate').value = new Date().toISOString().split('T')[0];
+            
+            // Set valid until date (30 days from today)
+            var validDate = new Date();
+            validDate.setDate(validDate.getDate() + 30);
+            document.getElementById('validUntil').value = validDate.toISOString().split('T')[0];
+
+            // Generate unique quote number
+            generateQuoteNumber();
+
+            // Initial calculation
+            updateTotals();
+        };
 
         // Generate unique quote number
         function generateQuoteNumber() {
@@ -472,80 +483,92 @@
             const month = String(date.getMonth() + 1).padStart(2, '0');
             const day = String(date.getDate()).padStart(2, '0');
             const time = String(date.getHours()).padStart(2, '0') + String(date.getMinutes()).padStart(2, '0');
-            document.getElementById('quoteNumber').value = `DDC-${year}${month}${day}-${time}`;
+            document.getElementById('quoteNumber').value = 'DDC-' + year + month + day + '-' + time;
         }
-        generateQuoteNumber();
 
+        // Calculate total for a single row
         function calculateRowTotal(element) {
-            const row = element.closest('tr');
-            const quantity = parseFloat(row.cells[1].querySelector('input').value) || 0;
-            const unitPrice = parseFloat(row.cells[2].querySelector('input').value) || 0;
-            const vatPercent = parseFloat(row.cells[3].querySelector('input').value) || 0;
+            const row = element.parentNode.parentNode;
+            const inputs = row.querySelectorAll('input');
+            
+            const quantity = parseFloat(inputs[1].value) || 0;
+            const unitPrice = parseFloat(inputs[2].value) || 0;
+            const vatPercent = parseFloat(inputs[3].value) || 0;
             
             const subtotal = quantity * unitPrice;
             const vatAmount = subtotal * (vatPercent / 100);
             const total = subtotal + vatAmount;
             
-            row.cells[4].querySelector('input').value = `R ${total.toFixed(2)}`;
+            inputs[4].value = 'R ' + total.toFixed(2);
             updateTotals();
         }
 
+        // Update the main totals section
         function updateTotals() {
             let subtotal = 0;
             let totalVAT = 0;
             
             const rows = document.querySelectorAll('#itemsTable tbody tr');
-            rows.forEach(row => {
-                const quantity = parseFloat(row.cells[1].querySelector('input').value) || 0;
-                const unitPrice = parseFloat(row.cells[2].querySelector('input').value) || 0;
-                const vatPercent = parseFloat(row.cells[3].querySelector('input').value) || 0;
-                
-                const rowSubtotal = quantity * unitPrice;
-                const rowVAT = rowSubtotal * (vatPercent / 100);
-                
-                subtotal += rowSubtotal;
-                totalVAT += rowVAT;
-            });
+            for (let i = 0; i < rows.length; i++) {
+                const inputs = rows[i].querySelectorAll('input');
+                if (inputs.length >= 4) {
+                    const quantity = parseFloat(inputs[1].value) || 0;
+                    const unitPrice = parseFloat(inputs[2].value) || 0;
+                    const vatPercent = parseFloat(inputs[3].value) || 0;
+                    
+                    const rowSubtotal = quantity * unitPrice;
+                    const rowVAT = rowSubtotal * (vatPercent / 100);
+                    
+                    subtotal += rowSubtotal;
+                    totalVAT += rowVAT;
+                }
+            }
             
             const finalTotal = subtotal + totalVAT;
             
-            document.getElementById('subtotal').textContent = `R ${subtotal.toFixed(2)}`;
-            document.getElementById('vatAmount').textContent = `R ${totalVAT.toFixed(2)}`;
-            document.getElementById('finalTotal').textContent = `R ${finalTotal.toFixed(2)}`;
+            document.getElementById('subtotal').textContent = 'R ' + subtotal.toFixed(2);
+            document.getElementById('vatAmount').textContent = 'R ' + totalVAT.toFixed(2);
+            document.getElementById('finalTotal').textContent = 'R ' + finalTotal.toFixed(2);
         }
 
+        // Add a new row to the quote items table
         function addRow() {
             const tbody = document.querySelector('#itemsTable tbody');
-            const newRow = tbody.insertRow();
+            const newRow = document.createElement('tr');
             
-            newRow.innerHTML = `
-                <td><input type="text" placeholder="Item description" onchange="updateTotals()"></td>
-                <td><input type="number" value="1" min="1" onchange="calculateRowTotal(this)" oninput="calculateRowTotal(this)"></td>
-                <td><input type="number" step="0.01" min="0" onchange="calculateRowTotal(this)" oninput="calculateRowTotal(this)"></td>
-                <td><input type="number" value="15" min="0" max="100" onchange="calculateRowTotal(this)" oninput="calculateRowTotal(this)"></td>
-                <td><input type="text" readonly value="R 0.00"></td>
-                <td><button type="button" class="remove-btn" onclick="removeRow(this)">×</button></td>
-            `;
+            newRow.innerHTML = 
+                '<td><input type="text" placeholder="Item description" onchange="updateTotals()"></td>' +
+                '<td><input type="number" value="1" min="1" onchange="calculateRowTotal(this)" oninput="calculateRowTotal(this)"></td>' +
+                '<td><input type="number" step="0.01" min="0" onchange="calculateRowTotal(this)" oninput="calculateRowTotal(this)"></td>' +
+                '<td><input type="number" value="15" min="0" max="100" onchange="calculateRowTotal(this)" oninput="calculateRowTotal(this)"></td>' +
+                '<td><input type="text" readonly value="R 0.00"></td>' +
+                '<td><button type="button" class="remove-btn" onclick="removeRow(this)">×</button></td>';
+            
+            tbody.appendChild(newRow);
+            updateTotals(); // Recalculate totals after adding a new row
         }
 
+        // Remove a row from the quote items table
         function removeRow(button) {
-            const row = button.closest('tr');
-            if (document.querySelectorAll('#itemsTable tbody tr').length > 1) {
+            const row = button.parentNode.parentNode;
+            const tbody = row.parentNode;
+            
+            if (tbody.children.length > 1) {
                 row.remove();
-                updateTotals();
+                updateTotals(); // Recalculate totals after removing a row
             } else {
                 alert('At least one item is required.');
             }
         }
 
+        // Preview the quote in a new window
         function previewQuote() {
             const clientName = document.getElementById('clientName').value;
             if (!clientName) {
-                alert('Please enter client name before previewing.');
+                alert('Please enter a client name before previewing.');
                 return;
             }
             
-            // Create preview window
             const previewWindow = window.open('', '_blank', 'width=800,height=1000');
             const content = generateQuoteHTML();
             
@@ -553,6 +576,7 @@
             previewWindow.document.close();
         }
 
+        // Generate the HTML content for the quote
         function generateQuoteHTML() {
             const quoteData = {
                 quoteNumber: document.getElementById('quoteNumber').value,
@@ -574,16 +598,42 @@
             const items = [];
             const rows = document.querySelectorAll('#itemsTable tbody tr');
             rows.forEach(row => {
-                const description = row.cells[0].querySelector('input').value;
-                const quantity = row.cells[1].querySelector('input').value;
-                const unitPrice = row.cells[2].querySelector('input').value;
-                const vatPercent = row.cells[3].querySelector('input').value;
-                const total = row.cells[4].querySelector('input').value;
-                
+                const inputs = row.querySelectorAll('input');
+                const description = inputs[0].value;
                 if (description) {
-                    items.push({ description, quantity, unitPrice, vatPercent, total });
+                    items.push({ 
+                        description: description, 
+                        quantity: inputs[1].value, 
+                        unitPrice: inputs[2].value, 
+                        vatPercent: inputs[3].value, 
+                        total: inputs[4].value 
+                    });
                 }
             });
+
+            const itemsHtml = items.map(item => `
+                <tr>
+                    <td>${item.description}</td>
+                    <td>${item.quantity}</td>
+                    <td>R ${parseFloat(item.unitPrice || 0).toFixed(2)}</td>
+                    <td>${item.vatPercent}%</td>
+                    <td>${item.total}</td>
+                </tr>
+            `).join('');
+
+            const bankingSection = quoteData.bankName ? `
+                <div class="section">
+                    <h3>BANKING DETAILS</h3>
+                    <p>Bank: ${quoteData.bankName}</p>
+                    <p>Account Holder: ${quoteData.accountHolder}</p>
+                    <p>Account Number: ${quoteData.accountNumber}</p>
+                    <p>Branch Code: ${quoteData.branchCode}</p>
+                </div>
+            ` : '';
+
+            const subtotal = document.getElementById('subtotal').textContent;
+            const vatAmount = document.getElementById('vatAmount').textContent;
+            const finalTotal = document.getElementById('finalTotal').textContent;
 
             return `
                 <!DOCTYPE html>
@@ -613,7 +663,6 @@
                             <p><strong>Date:</strong> ${quoteData.date}</p>
                             <p><strong>Valid Until:</strong> ${quoteData.validUntil}</p>
                         </div>
-                        
                         <div class="section">
                             <h3>CLIENT DETAILS</h3>
                             <p><strong>${quoteData.clientName}</strong></p>
@@ -623,7 +672,6 @@
                             <p>Event Date: ${quoteData.eventDate}</p>
                             <p>Address: ${quoteData.eventAddress}</p>
                         </div>
-                        
                         <table>
                             <thead>
                                 <tr>
@@ -635,39 +683,19 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                ${items.map(item => `
-                                    <tr>
-                                        <td>${item.description}</td>
-                                        <td>${item.quantity}</td>
-                                        <td>R ${parseFloat(item.unitPrice || 0).toFixed(2)}</td>
-                                        <td>${item.vatPercent}%</td>
-                                        <td>${item.total}</td>
-                                    </tr>
-                                `).join('')}
+                                ${itemsHtml}
                             </tbody>
                         </table>
-                        
                         <div class="totals">
-                            <p>Subtotal: ${document.getElementById('subtotal').textContent}</p>
-                            <p>VAT: ${document.getElementById('vatAmount').textContent}</p>
-                            <p><strong>TOTAL: ${document.getElementById('finalTotal').textContent}</strong></p>
+                            <p>Subtotal: ${subtotal}</p>
+                            <p>VAT: ${vatAmount}</p>
+                            <p><strong>TOTAL: ${finalTotal}</strong></p>
                         </div>
-                        
-                        ${quoteData.bankName ? `
-                        <div class="section">
-                            <h3>BANKING DETAILS</h3>
-                            <p>Bank: ${quoteData.bankName}</p>
-                            <p>Account Holder: ${quoteData.accountHolder}</p>
-                            <p>Account Number: ${quoteData.accountNumber}</p>
-                            <p>Branch Code: ${quoteData.branchCode}</p>
-                        </div>
-                        ` : ''}
-                        
+                        ${bankingSection}
                         <div class="section">
                             <h3>TERMS & CONDITIONS</h3>
                             <p>${quoteData.terms}</p>
                         </div>
-                        
                         <div class="section">
                             <p><strong>Janesha Bachen</strong> - Owner<br>
                             Phone: 071 733 1694<br>
@@ -680,14 +708,20 @@
             `;
         }
 
+        // Export the quote as a PDF
         function exportToPDF() {
             const clientName = document.getElementById('clientName').value;
             if (!clientName) {
-                alert('Please enter client name before exporting.');
+                alert('Please enter a client name before exporting.');
                 return;
             }
 
-            const { jsPDF } = window.jspdf;
+            if (typeof window.jspdf === 'undefined') {
+                alert('PDF export library not loaded. Please try refreshing the page.');
+                return;
+            }
+
+            const jsPDF = window.jspdf.jsPDF;
             const doc = new jsPDF();
             
             // Header
@@ -717,11 +751,11 @@
             
             doc.setFontSize(10);
             doc.setFont(undefined, 'normal');
-            doc.text(`Quote #: ${document.getElementById('quoteNumber').value}`, 20, y);
-            doc.text(`Date: ${document.getElementById('quoteDate').value}`, 120, y);
+            doc.text('Quote #: ' + document.getElementById('quoteNumber').value, 20, y);
+            doc.text('Date: ' + document.getElementById('quoteDate').value, 120, y);
             y += 5;
-            doc.text(`Valid Until: ${document.getElementById('validUntil').value}`, 20, y);
-            doc.text(`Event Date: ${document.getElementById('eventDate').value}`, 120, y);
+            doc.text('Valid Until: ' + document.getElementById('validUntil').value, 20, y);
+            doc.text('Event Date: ' + document.getElementById('eventDate').value, 120, y);
             y += 15;
             
             // Client details
@@ -732,13 +766,13 @@
             
             doc.setFontSize(10);
             doc.setFont(undefined, 'normal');
-            doc.text(`Name: ${document.getElementById('clientName').value}`, 20, y);
+            doc.text('Name: ' + document.getElementById('clientName').value, 20, y);
             y += 5;
-            doc.text(`Email: ${document.getElementById('clientEmail').value}`, 20, y);
+            doc.text('Email: ' + document.getElementById('clientEmail').value, 20, y);
             y += 5;
-            doc.text(`Phone: ${document.getElementById('clientPhone').value}`, 20, y);
+            doc.text('Phone: ' + document.getElementById('clientPhone').value, 20, y);
             y += 5;
-            doc.text(`Event Type: ${document.getElementById('eventType').value}`, 20, y);
+            doc.text('Event Type: ' + document.getElementById('eventType').value, 20, y);
             y += 15;
             
             // Items table header
@@ -757,17 +791,18 @@
             doc.setFont(undefined, 'normal');
             const rows = document.querySelectorAll('#itemsTable tbody tr');
             rows.forEach(row => {
-                const description = row.cells[0].querySelector('input').value;
-                const quantity = row.cells[1].querySelector('input').value;
-                const unitPrice = row.cells[2].querySelector('input').value;
-                const vatPercent = row.cells[3].querySelector('input').value;
-                const total = row.cells[4].querySelector('input').value;
-                
+                const inputs = row.querySelectorAll('input');
+                const description = inputs[0].value;
                 if (description) {
+                    const quantity = inputs[1].value;
+                    const unitPrice = inputs[2].value;
+                    const vatPercent = inputs[3].value;
+                    const total = inputs[4].value;
+                    
                     doc.text(description.substring(0, 40), 20, y);
                     doc.text(quantity, 120, y);
-                    doc.text(`R ${parseFloat(unitPrice || 0).toFixed(2)}`, 140, y);
-                    doc.text(`${vatPercent}%`, 165, y);
+                    doc.text('R ' + parseFloat(unitPrice || 0).toFixed(2), 140, y);
+                    doc.text(vatPercent + '%', 165, y);
                     doc.text(total, 180, y);
                     y += 5;
                 }
@@ -788,4 +823,75 @@
             doc.text('TOTAL:', 140, y);
             doc.text(document.getElementById('finalTotal').textContent, 170, y);
             
-            // Banking
+            // Banking details
+            const bankName = document.getElementById('bankName').value;
+            if (bankName) {
+                y += 15;
+                doc.setFontSize(12);
+                doc.text('BANKING DETAILS', 20, y);
+                y += 8;
+                doc.setFontSize(10);
+                doc.setFont(undefined, 'normal');
+                doc.text('Bank: ' + bankName, 20, y);
+                y += 5;
+                doc.text('Account Holder: ' + document.getElementById('accountHolder').value, 20, y);
+                y += 5;
+                doc.text('Account Number: ' + document.getElementById('accountNumber').value, 20, y);
+                y += 5;
+                doc.text('Branch Code: ' + document.getElementById('branchCode').value, 20, y);
+            }
+            
+            // Terms
+            y += 15;
+            doc.setFontSize(12);
+            doc.setFont(undefined, 'bold');
+            doc.text('TERMS & CONDITIONS', 20, y);
+            y += 8;
+            doc.setFontSize(10);
+            doc.setFont(undefined, 'normal');
+            const terms = document.getElementById('terms').value;
+            const splitTerms = doc.splitTextToSize(terms, 170);
+            doc.text(splitTerms, 20, y);
+            
+            // Contact info
+            y += splitTerms.length * 5 + 10;
+            doc.setFont(undefined, 'bold');
+            doc.text('Contact Information:', 20, y);
+            y += 5;
+            doc.setFont(undefined, 'normal');
+            doc.text('Janesha Bachen - Owner', 20, y);
+            y += 5;
+            doc.text('Phone: 071 733 1694', 20, y);
+            y += 5;
+            doc.text('Email: Janesha@deluxedesigncreations.co.za', 20, y);
+            y += 5;
+            doc.text('Address: 4 UBA Road, Maidstone Village, Tongaat, KwaZulu-Natal, 4400', 20, y);
+            
+            // Save the PDF
+            const filename = 'Quote-' + document.getElementById('quoteNumber').value + '.pdf';
+            doc.save(filename);
+        }
+
+        // Export the quote as a JPG
+        function exportToJPG() {
+            const clientName = document.getElementById('clientName').value;
+            if (!clientName) {
+                alert('Please enter a client name before exporting.');
+                return;
+            }
+
+            const element = document.getElementById('quote-container');
+            domtoimage.toJpeg(element, { quality: 0.95 })
+                .then(function (dataUrl) {
+                    const link = document.createElement('a');
+                    link.download = 'Quote-' + document.getElementById('quoteNumber').value + '.jpeg';
+                    link.href = dataUrl;
+                    link.click();
+                })
+                .catch(function (error) {
+                    console.error('oops, something went wrong!', error);
+                });
+        }
+    </script>
+</body>
+</html>
