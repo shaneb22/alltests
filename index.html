@@ -171,6 +171,19 @@
             padding: 8px;
             margin: 0;
         }
+        
+        #discount-group {
+            display: flex;
+            align-items: center;
+        }
+        
+        #discount-group label {
+            flex-grow: 1;
+        }
+        
+        #discount-group input {
+            width: 80px;
+        }
 
         .add-item-btn {
             background: #e91e63;
@@ -212,7 +225,11 @@
             margin-bottom: 10px;
             font-size: 16px;
         }
-
+        
+        .total-row.discount {
+            color: #ffcc00; 
+        }
+        
         .total-row.final {
             font-size: 20px;
             font-weight: 700;
@@ -281,6 +298,78 @@
             
             .action-buttons {
                 flex-direction: column;
+            }
+            
+            .items-table th, .items-table td {
+                display: block;
+                width: 100%;
+            }
+            
+            .items-table thead {
+                display: none;
+            }
+
+            .items-table tr {
+                border-bottom: 2px solid #e6d9ff;
+                margin-bottom: 10px;
+                display: block;
+            }
+            
+            .items-table td:before {
+                content: attr(data-label);
+                float: left;
+                font-weight: bold;
+                text-transform: uppercase;
+                color: #8b7cb8;
+            }
+            
+            .items-table td:last-child {
+                border-bottom: none;
+            }
+
+            .items-table input {
+                width: calc(100% - 100px);
+                float: right;
+                text-align: right;
+            }
+        }
+        
+        @media (prefers-color-scheme: dark) {
+            body {
+                background: #f5e6ff;
+            }
+            .container {
+                background: white;
+            }
+            .header {
+                background: linear-gradient(135deg, #8b7cb8 0%, #a691c7 100%);
+            }
+            .section-title {
+                color: #8b7cb8;
+            }
+            label {
+                color: #555;
+            }
+            input, textarea, select {
+                background: white;
+                color: #333;
+                border-color: #e6d9ff;
+            }
+            .items-section {
+                background: #f9f7ff;
+            }
+            .items-table th {
+                background: #8b7cb8;
+            }
+            .items-table td:before {
+                color: #8b7cb8;
+            }
+            .totals-section {
+                background: #8b7cb8;
+            }
+            .banking-section {
+                background: #f0f8ff;
+                border-left-color: #8b7cb8;
             }
         }
     </style>
@@ -389,11 +478,11 @@
                         </thead>
                         <tbody>
                             <tr>
-                                <td><input type="text" placeholder="Item description" onchange="updateTotals()"></td>
-                                <td><input type="number" value="1" min="1" onchange="calculateRowTotal(this)" oninput="calculateRowTotal(this)"></td>
-                                <td><input type="number" step="0.01" min="0" onchange="calculateRowTotal(this)" oninput="calculateRowTotal(this)"></td>
-                                <td><input type="number" value="15" min="0" max="100" onchange="calculateRowTotal(this)" oninput="calculateRowTotal(this)"></td>
-                                <td><input type="text" readonly value="R 0.00"></td>
+                                <td data-label="Description"><input type="text" placeholder="Item description" onchange="updateTotals()"></td>
+                                <td data-label="Quantity"><input type="number" value="1" min="1" onchange="calculateRowTotal(this)" oninput="calculateRowTotal(this)"></td>
+                                <td data-label="Unit Price"><input type="number" step="0.01" min="0" onchange="calculateRowTotal(this)" oninput="calculateRowTotal(this)"></td>
+                                <td data-label="VAT %"><input type="number" value="15" min="0" max="100" onchange="calculateRowTotal(this)" oninput="calculateRowTotal(this)"></td>
+                                <td data-label="Total"><input type="text" readonly value="R 0.00"></td>
                                 <td><button type="button" class="remove-btn" onclick="removeRow(this)">×</button></td>
                             </tr>
                         </tbody>
@@ -411,6 +500,14 @@
                     <span>VAT:</span>
                     <span id="vatAmount">R 0.00</span>
                 </div>
+                <div class="total-row discount">
+                    <span>Discount (%):</span>
+                    <input type="number" id="discountPercent" value="0" min="0" max="100" onchange="updateTotals()" oninput="updateTotals()">
+                </div>
+                <div class="total-row">
+                    <span>Discount Amount:</span>
+                    <span id="discountAmount">R 0.00</span>
+                </div>
                 <div class="total-row final">
                     <span>TOTAL:</span>
                     <span id="finalTotal">R 0.00</span>
@@ -423,21 +520,21 @@
                     <div class="form-row">
                         <div class="form-group">
                             <label>Bank Name</label>
-                            <input type="text" id="bankName" placeholder="e.g., Standard Bank">
+                            <input type="text" id="bankName" value="First National Bank">
                         </div>
                         <div class="form-group">
                             <label>Account Holder</label>
-                            <input type="text" id="accountHolder" value="Deluxe Design Creations">
+                            <input type="text" id="accountHolder" value="J Bachen">
                         </div>
                     </div>
                     <div class="form-row">
                         <div class="form-group">
                             <label>Account Number</label>
-                            <input type="text" id="accountNumber">
+                            <input type="text" id="accountNumber" value="62423359951">
                         </div>
                         <div class="form-group">
                             <label>Branch Code</label>
-                            <input type="text" id="branchCode">
+                            <input type="text" id="branchCode" value="250655">
                         </div>
                     </div>
                 </div>
@@ -465,25 +562,25 @@
             document.getElementById('quoteDate').value = new Date().toISOString().split('T')[0];
             
             // Set valid until date (30 days from today)
-            var validDate = new Date();
+            const validDate = new Date();
             validDate.setDate(validDate.getDate() + 30);
             document.getElementById('validUntil').value = validDate.toISOString().split('T')[0];
 
-            // Generate unique quote number
+            // Generate a random quote number on load
             generateQuoteNumber();
 
             // Initial calculation
             updateTotals();
         };
 
-        // Generate unique quote number
+        // Generate a random alphanumeric quote number
         function generateQuoteNumber() {
-            const date = new Date();
-            const year = date.getFullYear();
-            const month = String(date.getMonth() + 1).padStart(2, '0');
-            const day = String(date.getDate()).padStart(2, '0');
-            const time = String(date.getHours()).padStart(2, '0') + String(date.getMinutes()).padStart(2, '0');
-            document.getElementById('quoteNumber').value = 'DDC-' + year + month + day + '-' + time;
+            const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+            let result = 'DDC-';
+            for (let i = 0; i < 6; i++) {
+                result += characters.charAt(Math.floor(Math.random() * characters.length));
+            }
+            document.getElementById('quoteNumber').value = result;
         }
 
         // Calculate total for a single row
@@ -524,10 +621,13 @@
                 }
             }
             
-            const finalTotal = subtotal + totalVAT;
+            const discountPercent = parseFloat(document.getElementById('discountPercent').value) || 0;
+            const discountAmount = (subtotal + totalVAT) * (discountPercent / 100);
+            const finalTotal = (subtotal + totalVAT) - discountAmount;
             
             document.getElementById('subtotal').textContent = 'R ' + subtotal.toFixed(2);
             document.getElementById('vatAmount').textContent = 'R ' + totalVAT.toFixed(2);
+            document.getElementById('discountAmount').textContent = 'R ' + discountAmount.toFixed(2);
             document.getElementById('finalTotal').textContent = 'R ' + finalTotal.toFixed(2);
         }
 
@@ -537,15 +637,15 @@
             const newRow = document.createElement('tr');
             
             newRow.innerHTML = 
-                '<td><input type="text" placeholder="Item description" onchange="updateTotals()"></td>' +
-                '<td><input type="number" value="1" min="1" onchange="calculateRowTotal(this)" oninput="calculateRowTotal(this)"></td>' +
-                '<td><input type="number" step="0.01" min="0" onchange="calculateRowTotal(this)" oninput="calculateRowTotal(this)"></td>' +
-                '<td><input type="number" value="15" min="0" max="100" onchange="calculateRowTotal(this)" oninput="calculateRowTotal(this)"></td>' +
-                '<td><input type="text" readonly value="R 0.00"></td>' +
+                '<td data-label="Description"><input type="text" placeholder="Item description" onchange="updateTotals()"></td>' +
+                '<td data-label="Quantity"><input type="number" value="1" min="1" onchange="calculateRowTotal(this)" oninput="calculateRowTotal(this)"></td>' +
+                '<td data-label="Unit Price"><input type="number" step="0.01" min="0" onchange="calculateRowTotal(this)" oninput="calculateRowTotal(this)"></td>' +
+                '<td data-label="VAT %"><input type="number" value="15" min="0" max="100" onchange="calculateRowTotal(this)" oninput="calculateRowTotal(this)"></td>' +
+                '<td data-label="Total"><input type="text" readonly value="R 0.00"></td>' +
                 '<td><button type="button" class="remove-btn" onclick="removeRow(this)">×</button></td>';
             
             tbody.appendChild(newRow);
-            updateTotals(); // Recalculate totals after adding a new row
+            updateTotals(); 
         }
 
         // Remove a row from the quote items table
@@ -555,7 +655,7 @@
             
             if (tbody.children.length > 1) {
                 row.remove();
-                updateTotals(); // Recalculate totals after removing a row
+                updateTotals(); 
             } else {
                 alert('At least one item is required.');
             }
@@ -592,7 +692,11 @@
                 accountHolder: document.getElementById('accountHolder').value,
                 accountNumber: document.getElementById('accountNumber').value,
                 branchCode: document.getElementById('branchCode').value,
-                terms: document.getElementById('terms').value
+                terms: document.getElementById('terms').value,
+                subtotal: document.getElementById('subtotal').textContent,
+                vatAmount: document.getElementById('vatAmount').textContent,
+                discountAmount: document.getElementById('discountAmount').textContent,
+                finalTotal: document.getElementById('finalTotal').textContent
             };
 
             const items = [];
@@ -630,10 +734,10 @@
                     <p>Branch Code: ${quoteData.branchCode}</p>
                 </div>
             ` : '';
-
-            const subtotal = document.getElementById('subtotal').textContent;
-            const vatAmount = document.getElementById('vatAmount').textContent;
-            const finalTotal = document.getElementById('finalTotal').textContent;
+            
+            const discountRow = (parseFloat(quoteData.discountAmount.replace('R ', '')) > 0) ? `
+                <p>Discount: ${quoteData.discountAmount}</p>
+            ` : '';
 
             return `
                 <!DOCTYPE html>
@@ -687,9 +791,10 @@
                             </tbody>
                         </table>
                         <div class="totals">
-                            <p>Subtotal: ${subtotal}</p>
-                            <p>VAT: ${vatAmount}</p>
-                            <p><strong>TOTAL: ${finalTotal}</strong></p>
+                            <p>Subtotal: ${quoteData.subtotal}</p>
+                            <p>VAT: ${quoteData.vatAmount}</p>
+                            ${discountRow}
+                            <p><strong>TOTAL: ${quoteData.finalTotal}</strong></p>
                         </div>
                         ${bankingSection}
                         <div class="section">
@@ -751,7 +856,8 @@
             
             doc.setFontSize(10);
             doc.setFont(undefined, 'normal');
-            doc.text('Quote #: ' + document.getElementById('quoteNumber').value, 20, y);
+            const quoteNumber = document.getElementById('quoteNumber').value;
+            doc.text('Quote #: ' + quoteNumber, 20, y);
             doc.text('Date: ' + document.getElementById('quoteDate').value, 120, y);
             y += 5;
             doc.text('Valid Until: ' + document.getElementById('validUntil').value, 20, y);
@@ -820,6 +926,11 @@
             doc.text('VAT:', 140, y);
             doc.text(document.getElementById('vatAmount').textContent, 170, y);
             y += 5;
+            if (parseFloat(document.getElementById('discountAmount').textContent.replace('R ', '')) > 0) {
+                 doc.text('Discount:', 140, y);
+                 doc.text(document.getElementById('discountAmount').textContent, 170, y);
+                 y += 5;
+            }
             doc.text('TOTAL:', 140, y);
             doc.text(document.getElementById('finalTotal').textContent, 170, y);
             
@@ -868,7 +979,7 @@
             doc.text('Address: 4 UBA Road, Maidstone Village, Tongaat, KwaZulu-Natal, 4400', 20, y);
             
             // Save the PDF
-            const filename = 'Quote-' + document.getElementById('quoteNumber').value + '.pdf';
+            const filename = 'Quote-' + quoteNumber + '.pdf';
             doc.save(filename);
         }
 
@@ -883,8 +994,9 @@
             const element = document.getElementById('quote-container');
             domtoimage.toJpeg(element, { quality: 0.95 })
                 .then(function (dataUrl) {
+                    const quoteNumber = document.getElementById('quoteNumber').value;
                     const link = document.createElement('a');
-                    link.download = 'Quote-' + document.getElementById('quoteNumber').value + '.jpeg';
+                    link.download = 'Quote-' + quoteNumber + '.jpeg';
                     link.href = dataUrl;
                     link.click();
                 })
