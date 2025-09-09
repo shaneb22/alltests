@@ -282,6 +282,7 @@
             transform: translateY(-2px);
         }
 
+        /* --- Mobile Responsiveness --- */
         @media (max-width: 768px) {
             .form-row {
                 grid-template-columns: 1fr;
@@ -303,6 +304,7 @@
             .items-table th, .items-table td {
                 display: block;
                 width: 100%;
+                text-align: right;
             }
             
             .items-table thead {
@@ -334,6 +336,7 @@
             }
         }
         
+        /* --- Dark Mode Override --- */
         @media (prefers-color-scheme: dark) {
             body {
                 background: #f5e6ff;
@@ -939,6 +942,7 @@
             if (bankName) {
                 y += 15;
                 doc.setFontSize(12);
+                doc.setFont(undefined, 'bold');
                 doc.text('BANKING DETAILS', 20, y);
                 y += 8;
                 doc.setFontSize(10);
