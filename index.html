@@ -138,6 +138,11 @@
             border-color: #8b7cb8;
             box-shadow: 0 0 0 3px rgba(139, 124, 184, 0.1);
         }
+        
+        /* New wrapper for horizontal scrolling on mobile */
+        .table-wrapper {
+            overflow-x: auto;
+        }
 
         .items-section {
             background: #f9f7ff;
@@ -148,6 +153,7 @@
 
         .items-table {
             width: 100%;
+            min-width: 600px; /* Ensures horizontal scroll */
             border-collapse: collapse;
             margin-bottom: 15px;
         }
@@ -300,39 +306,14 @@
             .action-buttons {
                 flex-direction: column;
             }
-            
+
+            .items-table td:before, .items-table th {
+                display: initial; /* Revert mobile-specific table changes */
+            }
+
             .items-table th, .items-table td {
-                display: block;
-                width: 100%;
-                text-align: right;
-            }
-            
-            .items-table thead {
-                display: none;
-            }
-
-            .items-table tr {
-                border-bottom: 2px solid #e6d9ff;
-                margin-bottom: 10px;
-                display: block;
-            }
-            
-            .items-table td:before {
-                content: attr(data-label);
-                float: left;
-                font-weight: bold;
-                text-transform: uppercase;
-                color: #8b7cb8;
-            }
-            
-            .items-table td:last-child {
-                border-bottom: none;
-            }
-
-            .items-table input {
-                width: calc(100% - 100px);
-                float: right;
-                text-align: right;
+                display: table-cell;
+                text-align: left;
             }
         }
         
@@ -468,28 +449,30 @@
             <div class="form-section">
                 <h2 class="section-title">Quote Items</h2>
                 <div class="items-section">
-                    <table class="items-table" id="itemsTable">
-                        <thead>
-                            <tr>
-                                <th width="35%">Description</th>
-                                <th width="15%">Quantity</th>
-                                <th width="15%">Unit Price (R)</th>
-                                <th width="15%">VAT %</th>
-                                <th width="15%">Total (R)</th>
-                                <th width="5%"></th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr>
-                                <td data-label="Description"><input type="text" placeholder="Item description" onchange="updateTotals()"></td>
-                                <td data-label="Quantity"><input type="number" value="1" min="1" onchange="calculateRowTotal(this)" oninput="calculateRowTotal(this)"></td>
-                                <td data-label="Unit Price"><input type="number" step="0.01" min="0" onchange="calculateRowTotal(this)" oninput="calculateRowTotal(this)"></td>
-                                <td data-label="VAT %"><input type="number" value="15" min="0" max="100" onchange="calculateRowTotal(this)" oninput="calculateRowTotal(this)"></td>
-                                <td data-label="Total"><input type="text" readonly value="R 0.00"></td>
-                                <td><button type="button" class="remove-btn" onclick="removeRow(this)">×</button></td>
-                            </tr>
-                        </tbody>
-                    </table>
+                    <div class="table-wrapper">
+                        <table class="items-table" id="itemsTable">
+                            <thead>
+                                <tr>
+                                    <th width="35%">Description</th>
+                                    <th width="15%">Quantity</th>
+                                    <th width="15%">Unit Price (R)</th>
+                                    <th width="15%">VAT %</th>
+                                    <th width="15%">Total (R)</th>
+                                    <th width="5%"></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td><input type="text" placeholder="Item description" onchange="updateTotals()"></td>
+                                    <td><input type="number" value="1" min="1" onchange="calculateRowTotal(this)" oninput="calculateRowTotal(this)"></td>
+                                    <td><input type="number" step="0.01" min="0" onchange="calculateRowTotal(this)" oninput="calculateRowTotal(this)"></td>
+                                    <td><input type="number" value="15" min="0" max="100" onchange="calculateRowTotal(this)" oninput="calculateRowTotal(this)"></td>
+                                    <td><input type="text" readonly value="R 0.00"></td>
+                                    <td><button type="button" class="remove-btn" onclick="removeRow(this)">×</button></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
                     <button type="button" class="add-item-btn" onclick="addRow()">+ Add Item</button>
                 </div>
             </div>
@@ -546,7 +529,7 @@
             <div class="form-section">
                 <div class="form-group">
                     <label>Terms & Conditions / Notes</label>
-                    <textarea id="terms" rows="4" placeholder="Enter any special terms, conditions, or additional notes...">50% deposit required to confirm booking. Final payment due 48 hours before event date. Prices valid for 30 days from quote date.</textarea>
+                    <textarea id="terms" rows="4" placeholder="Enter any special terms, conditions, or additional notes...">50% deposit required to confirm booking. Final payment due 48 hours before event date. Prices valid for 7 days from quote date.</textarea>
                 </div>
             </div>
 
@@ -564,9 +547,9 @@
             // Set today's date as default
             document.getElementById('quoteDate').value = new Date().toISOString().split('T')[0];
             
-            // Set valid until date (30 days from today)
+            // Set valid until date (7 days from today)
             const validDate = new Date();
-            validDate.setDate(validDate.getDate() + 30);
+            validDate.setDate(validDate.getDate() + 7);
             document.getElementById('validUntil').value = validDate.toISOString().split('T')[0];
 
             // Generate a random quote number on load
@@ -640,11 +623,11 @@
             const newRow = document.createElement('tr');
             
             newRow.innerHTML = 
-                '<td data-label="Description"><input type="text" placeholder="Item description" onchange="updateTotals()"></td>' +
-                '<td data-label="Quantity"><input type="number" value="1" min="1" onchange="calculateRowTotal(this)" oninput="calculateRowTotal(this)"></td>' +
-                '<td data-label="Unit Price"><input type="number" step="0.01" min="0" onchange="calculateRowTotal(this)" oninput="calculateRowTotal(this)"></td>' +
-                '<td data-label="VAT %"><input type="number" value="15" min="0" max="100" onchange="calculateRowTotal(this)" oninput="calculateRowTotal(this)"></td>' +
-                '<td data-label="Total"><input type="text" readonly value="R 0.00"></td>' +
+                '<td><input type="text" placeholder="Item description" onchange="updateTotals()"></td>' +
+                '<td><input type="number" value="1" min="1" onchange="calculateRowTotal(this)" oninput="calculateRowTotal(this)"></td>' +
+                '<td><input type="number" step="0.01" min="0" onchange="calculateRowTotal(this)" oninput="calculateRowTotal(this)"></td>' +
+                '<td><input type="number" value="15" min="0" max="100" onchange="calculateRowTotal(this)" oninput="calculateRowTotal(this)"></td>' +
+                '<td><input type="text" readonly value="R 0.00"></td>' +
                 '<td><button type="button" class="remove-btn" onclick="removeRow(this)">×</button></td>';
             
             tbody.appendChild(newRow);
