@@ -3,15 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Deluxe Design Creations - Quote Platform</title>
+    <title>Deluxe Design Creations - Quote & Invoice Platform</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/dom-to-image/2.6.0/dom-to-image.min.js"></script>
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
 
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
@@ -29,6 +25,60 @@
             overflow: hidden;
         }
 
+        /* ── Document Type Toggle ── */
+        .doc-toggle-bar {
+            background: #f0ecff;
+            padding: 16px 40px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            border-bottom: 2px solid #e6d9ff;
+        }
+
+        .doc-toggle-bar span {
+            font-weight: 600;
+            color: #555;
+            font-size: 15px;
+            margin-right: 6px;
+        }
+
+        .toggle-btn {
+            padding: 8px 28px;
+            border: 2px solid #8b7cb8;
+            border-radius: 25px;
+            background: white;
+            color: #8b7cb8;
+            font-weight: 700;
+            font-size: 15px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .toggle-btn.active {
+            background: #8b7cb8;
+            color: white;
+        }
+
+        .toggle-btn:hover:not(.active) {
+            background: #f0ecff;
+        }
+
+        .doc-type-badge {
+            margin-left: auto;
+            background: #8b7cb8;
+            color: white;
+            padding: 5px 18px;
+            border-radius: 20px;
+            font-weight: 700;
+            font-size: 13px;
+            letter-spacing: 1px;
+        }
+
+        .doc-type-badge.invoice-badge {
+            background: #e91e63;
+        }
+
+        /* ── Header ── */
         .header {
             background: linear-gradient(135deg, #8b7cb8 0%, #a691c7 100%);
             color: white;
@@ -66,9 +116,7 @@
             background: #666;
         }
 
-        .company-info {
-            margin-left: 120px;
-        }
+        .company-info { margin-left: 120px; }
 
         .company-name {
             font-size: 2.2em;
@@ -91,13 +139,10 @@
             font-size: 0.95em;
         }
 
-        .quote-form {
-            padding: 40px;
-        }
+        /* ── Form ── */
+        .quote-form { padding: 40px; }
 
-        .form-section {
-            margin-bottom: 30px;
-        }
+        .form-section { margin-bottom: 30px; }
 
         .section-title {
             font-size: 1.3em;
@@ -114,16 +159,9 @@
             margin-bottom: 15px;
         }
 
-        .form-group {
-            display: flex;
-            flex-direction: column;
-        }
+        .form-group { display: flex; flex-direction: column; }
 
-        label {
-            font-weight: 600;
-            color: #555;
-            margin-bottom: 5px;
-        }
+        label { font-weight: 600; color: #555; margin-bottom: 5px; }
 
         input, textarea, select {
             padding: 12px;
@@ -138,11 +176,14 @@
             border-color: #8b7cb8;
             box-shadow: 0 0 0 3px rgba(139, 124, 184, 0.1);
         }
-        
-        /* New wrapper for horizontal scrolling on mobile */
-        .table-wrapper {
-            overflow-x: auto;
-        }
+
+        /* Invoice-specific status field */
+        .invoice-only { display: none; }
+        body.invoice-mode .invoice-only { display: flex; }
+        body.invoice-mode .quote-only { display: none; }
+
+        /* ── Items Table ── */
+        .table-wrapper { overflow-x: auto; }
 
         .items-section {
             background: #f9f7ff;
@@ -153,7 +194,7 @@
 
         .items-table {
             width: 100%;
-            min-width: 600px; /* Ensures horizontal scroll */
+            min-width: 600px;
             border-collapse: collapse;
             margin-bottom: 15px;
         }
@@ -177,19 +218,6 @@
             padding: 8px;
             margin: 0;
         }
-        
-        #discount-group {
-            display: flex;
-            align-items: center;
-        }
-        
-        #discount-group label {
-            flex-grow: 1;
-        }
-        
-        #discount-group input {
-            width: 80px;
-        }
 
         .add-item-btn {
             background: #e91e63;
@@ -202,9 +230,7 @@
             transition: background-color 0.3s ease;
         }
 
-        .add-item-btn:hover {
-            background: #c2185b;
-        }
+        .add-item-btn:hover { background: #c2185b; }
 
         .remove-btn {
             background: #ff5722;
@@ -216,6 +242,7 @@
             font-size: 12px;
         }
 
+        /* ── Totals ── */
         .totals-section {
             background: #8b7cb8;
             color: white;
@@ -231,11 +258,9 @@
             margin-bottom: 10px;
             font-size: 16px;
         }
-        
-        .total-row.discount {
-            color: #ffcc00; 
-        }
-        
+
+        .total-row.discount { color: #ffcc00; }
+
         .total-row.final {
             font-size: 20px;
             font-weight: 700;
@@ -244,6 +269,40 @@
             margin-top: 15px;
         }
 
+        /* ── Payment Status (Invoice only) ── */
+        .payment-status-section {
+            background: #fff8f0;
+            border-left: 4px solid #e91e63;
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+        }
+
+        .status-badges {
+            display: flex;
+            gap: 10px;
+            margin-top: 10px;
+            flex-wrap: wrap;
+        }
+
+        .status-badge {
+            padding: 8px 20px;
+            border-radius: 20px;
+            border: 2px solid;
+            font-weight: 700;
+            font-size: 13px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .status-badge.unpaid { border-color: #e91e63; color: #e91e63; }
+        .status-badge.unpaid.selected { background: #e91e63; color: white; }
+        .status-badge.partial { border-color: #ff9800; color: #ff9800; }
+        .status-badge.partial.selected { background: #ff9800; color: white; }
+        .status-badge.paid { border-color: #4caf50; color: #4caf50; }
+        .status-badge.paid.selected { background: #4caf50; color: white; }
+
+        /* ── Banking ── */
         .banking-section {
             background: #f0f8ff;
             padding: 20px;
@@ -251,11 +310,13 @@
             border-left: 4px solid #8b7cb8;
         }
 
+        /* ── Action Buttons ── */
         .action-buttons {
             display: flex;
             gap: 15px;
             justify-content: center;
             margin-top: 30px;
+            flex-wrap: wrap;
         }
 
         .btn {
@@ -268,729 +329,599 @@
             transition: all 0.3s ease;
         }
 
-        .btn-primary {
-            background: #8b7cb8;
-            color: white;
-        }
+        .btn-primary { background: #8b7cb8; color: white; }
+        .btn-primary:hover { background: #7a6aa4; transform: translateY(-2px); }
+        .btn-secondary { background: #e91e63; color: white; }
+        .btn-secondary:hover { background: #c2185b; transform: translateY(-2px); }
 
-        .btn-primary:hover {
-            background: #7a6aa4;
-            transform: translateY(-2px);
-        }
-
-        .btn-secondary {
-            background: #e91e63;
-            color: white;
-        }
-
-        .btn-secondary:hover {
-            background: #c2185b;
-            transform: translateY(-2px);
-        }
-
-        /* --- Mobile Responsiveness --- */
+        /* ── Mobile ── */
         @media (max-width: 768px) {
-            .form-row {
-                grid-template-columns: 1fr;
-            }
-            
-            .contact-info {
-                grid-template-columns: 1fr;
-            }
-            
-            .company-info {
-                margin-left: 0;
-                margin-top: 60px;
-            }
-            
-            .action-buttons {
-                flex-direction: column;
-            }
-
-            .items-table td:before, .items-table th {
-                display: initial; /* Revert mobile-specific table changes */
-            }
-
-            .items-table th, .items-table td {
-                display: table-cell;
-                text-align: left;
-            }
+            .form-row { grid-template-columns: 1fr; }
+            .contact-info { grid-template-columns: 1fr; }
+            .company-info { margin-left: 0; margin-top: 60px; }
+            .action-buttons { flex-direction: column; }
+            .doc-toggle-bar { padding: 16px 20px; }
         }
-        
-        /* --- Dark Mode Override --- */
+
         @media (prefers-color-scheme: dark) {
-            body {
-                background: #f5e6ff;
-            }
-            .container {
-                background: white;
-            }
-            .header {
-                background: linear-gradient(135deg, #8b7cb8 0%, #a691c7 100%);
-            }
-            .section-title {
-                color: #8b7cb8;
-            }
-            label {
-                color: #555;
-            }
-            input, textarea, select {
-                background: white;
-                color: #333;
-                border-color: #e6d9ff;
-            }
-            .items-section {
-                background: #f9f7ff;
-            }
-            .items-table th {
-                background: #8b7cb8;
-            }
-            .items-table td:before {
-                color: #8b7cb8;
-            }
-            .totals-section {
-                background: #8b7cb8;
-            }
-            .banking-section {
-                background: #f0f8ff;
-                border-left-color: #8b7cb8;
-            }
+            body { background: #f5e6ff; }
+            .container { background: white; }
+            label { color: #555; }
+            input, textarea, select { background: white; color: #333; border-color: #e6d9ff; }
         }
     </style>
 </head>
 <body>
-    <div class="container" id="quote-container">
-        <div class="header">
-            <div class="balloons">
-                <div class="balloon"></div>
-                <div class="balloon"></div>
-                <div class="balloon"></div>
-            </div>
-            <div class="company-info">
-                <h1 class="company-name">DELUXE DESIGN CREATIONS</h1>
-                <p class="tagline">Crafting beautiful moments, one celebration at a time</p>
-                <div class="contact-info">
-                    <div>
-                        <strong>JANESHA BACHEN</strong><br>
-                        Owner<br>
-                        071 733 1694<br>
-                        Janesha@deluxedesigncreations.co.za
-                    </div>
-                    <div>
-                        4 UBA Road<br>
-                        Maidstone Village, Tongaat<br>
-                        KwaZulu-Natal, 4400<br>
-                        South Africa
-                    </div>
-                </div>
-            </div>
+<div class="container" id="quote-container">
+
+    <!-- Document Type Toggle -->
+    <div class="doc-toggle-bar">
+        <span>Document Type:</span>
+        <button class="toggle-btn active" id="btn-quote" onclick="setMode('quote')">Quote</button>
+        <button class="toggle-btn" id="btn-invoice" onclick="setMode('invoice')">Invoice</button>
+        <div class="doc-type-badge" id="doc-badge">QUOTATION</div>
+    </div>
+
+    <!-- Header -->
+    <div class="header">
+        <div class="balloons">
+            <div class="balloon"></div>
+            <div class="balloon"></div>
+            <div class="balloon"></div>
         </div>
-
-        <div class="quote-form">
-            <div class="form-section">
-                <h2 class="section-title">Quote Information</h2>
-                <div class="form-row">
-                    <div class="form-group">
-                        <label>Quote Number</label>
-                        <input type="text" id="quoteNumber" value="DDC-001" readonly>
-                    </div>
-                    <div class="form-group">
-                        <label>Date</label>
-                        <input type="date" id="quoteDate">
-                    </div>
+        <div class="company-info">
+            <h1 class="company-name">DELUXE DESIGN CREATIONS</h1>
+            <p class="tagline">Crafting beautiful moments, one celebration at a time</p>
+            <div class="contact-info">
+                <div>
+                    <strong>JANESHA BACHEN</strong><br>
+                    Owner<br>
+                    071 733 1694<br>
+                    Janesha@deluxedesigncreations.co.za
                 </div>
-                <div class="form-row">
-                    <div class="form-group">
-                        <label>Valid Until</label>
-                        <input type="date" id="validUntil">
-                    </div>
-                    <div class="form-group">
-                        <label>Event Date</label>
-                        <input type="date" id="eventDate">
-                    </div>
+                <div>
+                    4 UBA Road<br>
+                    Maidstone Village, Tongaat<br>
+                    KwaZulu-Natal, 4400<br>
+                    South Africa
                 </div>
-            </div>
-
-            <div class="form-section">
-                <h2 class="section-title">Client Information</h2>
-                <div class="form-row">
-                    <div class="form-group">
-                        <label>Client Name *</label>
-                        <input type="text" id="clientName" required>
-                    </div>
-                    <div class="form-group">
-                        <label>Email Address</label>
-                        <input type="email" id="clientEmail">
-                    </div>
-                </div>
-                <div class="form-row">
-                    <div class="form-group">
-                        <label>Phone Number</label>
-                        <input type="tel" id="clientPhone">
-                    </div>
-                    <div class="form-group">
-                        <label>Event Type</label>
-                        <select id="eventType">
-                            <option>Birthday Party</option>
-                            <option>Wedding</option>
-                            <option>Corporate Event</option>
-                            <option>Baby Shower</option>
-                            <option>Anniversary</option>
-                            <option>Other</option>
-                        </select>
-                    </div>
-                </div>
-                <div class="form-group">
-                    <label>Event Address</label>
-                    <textarea id="eventAddress" rows="3"></textarea>
-                </div>
-            </div>
-
-            <div class="form-section">
-                <h2 class="section-title">Quote Items</h2>
-                <div class="items-section">
-                    <div class="table-wrapper">
-                        <table class="items-table" id="itemsTable">
-                            <thead>
-                                <tr>
-                                    <th width="35%">Description</th>
-                                    <th width="15%">Quantity</th>
-                                    <th width="15%">Unit Price (R)</th>
-                                    <th width="15%">VAT %</th>
-                                    <th width="15%">Total (R)</th>
-                                    <th width="5%"></th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr>
-                                    <td><input type="text" placeholder="Item description" onchange="updateTotals()"></td>
-                                    <td><input type="number" value="1" min="1" onchange="calculateRowTotal(this)" oninput="calculateRowTotal(this)"></td>
-                                    <td><input type="number" step="0.01" min="0" onchange="calculateRowTotal(this)" oninput="calculateRowTotal(this)"></td>
-                                    <td><input type="number" value="15" min="0" max="100" onchange="calculateRowTotal(this)" oninput="calculateRowTotal(this)"></td>
-                                    <td><input type="text" readonly value="R 0.00"></td>
-                                    <td><button type="button" class="remove-btn" onclick="removeRow(this)">×</button></td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
-                    <button type="button" class="add-item-btn" onclick="addRow()">+ Add Item</button>
-                </div>
-            </div>
-
-            <div class="totals-section">
-                <div class="total-row">
-                    <span>Subtotal:</span>
-                    <span id="subtotal">R 0.00</span>
-                </div>
-                <div class="total-row">
-                    <span>VAT:</span>
-                    <span id="vatAmount">R 0.00</span>
-                </div>
-                <div class="total-row discount">
-                    <span>Discount (%):</span>
-                    <input type="number" id="discountPercent" value="0" min="0" max="100" onchange="updateTotals()" oninput="updateTotals()">
-                </div>
-                <div class="total-row">
-                    <span>Discount Amount:</span>
-                    <span id="discountAmount">R 0.00</span>
-                </div>
-                <div class="total-row final">
-                    <span>TOTAL:</span>
-                    <span id="finalTotal">R 0.00</span>
-                </div>
-            </div>
-
-            <div class="form-section">
-                <h2 class="section-title">Banking Details</h2>
-                <div class="banking-section">
-                    <div class="form-row">
-                        <div class="form-group">
-                            <label>Bank Name</label>
-                            <input type="text" id="bankName" value="First National Bank">
-                        </div>
-                        <div class="form-group">
-                            <label>Account Holder</label>
-                            <input type="text" id="accountHolder" value="J Bachen">
-                        </div>
-                    </div>
-                    <div class="form-row">
-                        <div class="form-group">
-                            <label>Account Number</label>
-                            <input type="text" id="accountNumber" value="62423359951">
-                        </div>
-                        <div class="form-group">
-                            <label>Branch Code</label>
-                            <input type="text" id="branchCode" value="250655">
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <div class="form-section">
-                <div class="form-group">
-                    <label>Terms & Conditions / Notes</label>
-                    <textarea id="terms" rows="4" placeholder="Enter any special terms, conditions, or additional notes...">50% deposit required to confirm booking. Final payment due 48 hours before event date. Prices valid for 7 days from quote date.</textarea>
-                </div>
-            </div>
-
-            <div class="action-buttons">
-                <button type="button" class="btn btn-primary" onclick="previewQuote()">Preview Quote</button>
-                <button type="button" class="btn btn-secondary" onclick="exportToPDF()">Export to PDF</button>
-                <button type="button" class="btn btn-primary" onclick="exportToJPG()">Export to JPG</button>
             </div>
         </div>
     </div>
 
-    <script>
-        // Initialize the form
-        window.onload = function() {
-            // Set today's date as default
-            document.getElementById('quoteDate').value = new Date().toISOString().split('T')[0];
-            
-            // Set valid until date (7 days from today)
-            const validDate = new Date();
-            validDate.setDate(validDate.getDate() + 7);
-            document.getElementById('validUntil').value = validDate.toISOString().split('T')[0];
+    <div class="quote-form">
 
-            // Generate a random quote number on load
-            generateQuoteNumber();
-
-            // Initial calculation
-            updateTotals();
-        };
-
-        // Generate a random alphanumeric quote number
-        function generateQuoteNumber() {
-            const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
-            let result = 'DDC-';
-            for (let i = 0; i < 6; i++) {
-                result += characters.charAt(Math.floor(Math.random() * characters.length));
-            }
-            document.getElementById('quoteNumber').value = result;
-        }
-
-        // Calculate total for a single row
-        function calculateRowTotal(element) {
-            const row = element.parentNode.parentNode;
-            const inputs = row.querySelectorAll('input');
-            
-            const quantity = parseFloat(inputs[1].value) || 0;
-            const unitPrice = parseFloat(inputs[2].value) || 0;
-            const vatPercent = parseFloat(inputs[3].value) || 0;
-            
-            const subtotal = quantity * unitPrice;
-            const vatAmount = subtotal * (vatPercent / 100);
-            const total = subtotal + vatAmount;
-            
-            inputs[4].value = 'R ' + total.toFixed(2);
-            updateTotals();
-        }
-
-        // Update the main totals section
-        function updateTotals() {
-            let subtotal = 0;
-            let totalVAT = 0;
-            
-            const rows = document.querySelectorAll('#itemsTable tbody tr');
-            for (let i = 0; i < rows.length; i++) {
-                const inputs = rows[i].querySelectorAll('input');
-                if (inputs.length >= 4) {
-                    const quantity = parseFloat(inputs[1].value) || 0;
-                    const unitPrice = parseFloat(inputs[2].value) || 0;
-                    const vatPercent = parseFloat(inputs[3].value) || 0;
-                    
-                    const rowSubtotal = quantity * unitPrice;
-                    const rowVAT = rowSubtotal * (vatPercent / 100);
-                    
-                    subtotal += rowSubtotal;
-                    totalVAT += rowVAT;
-                }
-            }
-            
-            const discountPercent = parseFloat(document.getElementById('discountPercent').value) || 0;
-            const discountAmount = (subtotal + totalVAT) * (discountPercent / 100);
-            const finalTotal = (subtotal + totalVAT) - discountAmount;
-            
-            document.getElementById('subtotal').textContent = 'R ' + subtotal.toFixed(2);
-            document.getElementById('vatAmount').textContent = 'R ' + totalVAT.toFixed(2);
-            document.getElementById('discountAmount').textContent = 'R ' + discountAmount.toFixed(2);
-            document.getElementById('finalTotal').textContent = 'R ' + finalTotal.toFixed(2);
-        }
-
-        // Add a new row to the quote items table
-        function addRow() {
-            const tbody = document.querySelector('#itemsTable tbody');
-            const newRow = document.createElement('tr');
-            
-            newRow.innerHTML = 
-                '<td><input type="text" placeholder="Item description" onchange="updateTotals()"></td>' +
-                '<td><input type="number" value="1" min="1" onchange="calculateRowTotal(this)" oninput="calculateRowTotal(this)"></td>' +
-                '<td><input type="number" step="0.01" min="0" onchange="calculateRowTotal(this)" oninput="calculateRowTotal(this)"></td>' +
-                '<td><input type="number" value="15" min="0" max="100" onchange="calculateRowTotal(this)" oninput="calculateRowTotal(this)"></td>' +
-                '<td><input type="text" readonly value="R 0.00"></td>' +
-                '<td><button type="button" class="remove-btn" onclick="removeRow(this)">×</button></td>';
-            
-            tbody.appendChild(newRow);
-            updateTotals(); 
-        }
-
-        // Remove a row from the quote items table
-        function removeRow(button) {
-            const row = button.parentNode.parentNode;
-            const tbody = row.parentNode;
-            
-            if (tbody.children.length > 1) {
-                row.remove();
-                updateTotals(); 
-            } else {
-                alert('At least one item is required.');
-            }
-        }
-
-        // Preview the quote in a new window
-        function previewQuote() {
-            const clientName = document.getElementById('clientName').value;
-            if (!clientName) {
-                alert('Please enter a client name before previewing.');
-                return;
-            }
-            
-            const previewWindow = window.open('', '_blank', 'width=800,height=1000');
-            const content = generateQuoteHTML();
-            
-            previewWindow.document.write(content);
-            previewWindow.document.close();
-        }
-
-        // Generate the HTML content for the quote
-        function generateQuoteHTML() {
-            const quoteData = {
-                quoteNumber: document.getElementById('quoteNumber').value,
-                date: document.getElementById('quoteDate').value,
-                validUntil: document.getElementById('validUntil').value,
-                eventDate: document.getElementById('eventDate').value,
-                clientName: document.getElementById('clientName').value,
-                clientEmail: document.getElementById('clientEmail').value,
-                clientPhone: document.getElementById('clientPhone').value,
-                eventType: document.getElementById('eventType').value,
-                eventAddress: document.getElementById('eventAddress').value,
-                bankName: document.getElementById('bankName').value,
-                accountHolder: document.getElementById('accountHolder').value,
-                accountNumber: document.getElementById('accountNumber').value,
-                branchCode: document.getElementById('branchCode').value,
-                terms: document.getElementById('terms').value,
-                subtotal: document.getElementById('subtotal').textContent,
-                vatAmount: document.getElementById('vatAmount').textContent,
-                discountAmount: document.getElementById('discountAmount').textContent,
-                finalTotal: document.getElementById('finalTotal').textContent
-            };
-
-            const items = [];
-            const rows = document.querySelectorAll('#itemsTable tbody tr');
-            rows.forEach(row => {
-                const inputs = row.querySelectorAll('input');
-                const description = inputs[0].value;
-                if (description) {
-                    items.push({ 
-                        description: description, 
-                        quantity: inputs[1].value, 
-                        unitPrice: inputs[2].value, 
-                        vatPercent: inputs[3].value, 
-                        total: inputs[4].value 
-                    });
-                }
-            });
-
-            const itemsHtml = items.map(item => `
-                <tr>
-                    <td>${item.description}</td>
-                    <td>${item.quantity}</td>
-                    <td>R ${parseFloat(item.unitPrice || 0).toFixed(2)}</td>
-                    <td>${item.vatPercent}%</td>
-                    <td>${item.total}</td>
-                </tr>
-            `).join('');
-
-            const bankingSection = quoteData.bankName ? `
-                <div class="section">
-                    <h3>BANKING DETAILS</h3>
-                    <p>Bank: ${quoteData.bankName}</p>
-                    <p>Account Holder: ${quoteData.accountHolder}</p>
-                    <p>Account Number: ${quoteData.accountNumber}</p>
-                    <p>Branch Code: ${quoteData.branchCode}</p>
+        <!-- Document Info -->
+        <div class="form-section">
+            <h2 class="section-title" id="doc-section-title">Quote Information</h2>
+            <div class="form-row">
+                <div class="form-group">
+                    <label id="doc-number-label">Quote Number</label>
+                    <input type="text" id="quoteNumber" value="DDC-001" readonly>
                 </div>
-            ` : '';
-            
-            const discountRow = (parseFloat(quoteData.discountAmount.replace('R ', '')) > 0) ? `
-                <p>Discount: ${quoteData.discountAmount}</p>
-            ` : '';
+                <div class="form-group">
+                    <label>Date</label>
+                    <input type="date" id="quoteDate">
+                </div>
+            </div>
+            <div class="form-row">
+                <div class="form-group quote-only" id="valid-until-group">
+                    <label>Valid Until</label>
+                    <input type="date" id="validUntil">
+                </div>
+                <div class="form-group invoice-only" id="due-date-group" style="display:none;">
+                    <label>Payment Due Date</label>
+                    <input type="date" id="dueDate">
+                </div>
+                <div class="form-group">
+                    <label>Event Date</label>
+                    <input type="date" id="eventDate">
+                </div>
+            </div>
+        </div>
 
-            return `
-                <!DOCTYPE html>
-                <html>
-                <head>
-                    <title>Quote - ${quoteData.quoteNumber}</title>
-                    <style>
-                        body { font-family: Arial, sans-serif; margin: 20px; background: white; }
-                        .header { background: #8b7cb8; color: white; padding: 30px; text-align: center; }
-                        .content { padding: 20px; }
-                        table { width: 100%; border-collapse: collapse; margin: 15px 0; }
-                        th, td { border: 1px solid #ddd; padding: 8px; text-align: left; }
-                        th { background: #f2f2f2; }
-                        .totals { background: #8b7cb8; color: white; padding: 15px; }
-                        .section { margin: 20px 0; }
-                    </style>
-                </head>
-                <body>
-                    <div class="header">
-                        <h1>DELUXE DESIGN CREATIONS</h1>
-                        <p>Crafting beautiful moments, one celebration at a time</p>
+        <!-- Payment Status (Invoice only) -->
+        <div class="form-section invoice-only" id="payment-status-section" style="display:none;">
+            <div class="payment-status-section">
+                <h2 class="section-title" style="border:none; margin-bottom:8px;">Payment Status</h2>
+                <div class="status-badges">
+                    <button class="status-badge unpaid selected" onclick="selectStatus('unpaid')">Unpaid</button>
+                    <button class="status-badge partial" onclick="selectStatus('partial')">Partially Paid</button>
+                    <button class="status-badge paid" onclick="selectStatus('paid')">Paid</button>
+                </div>
+                <div id="partial-amount-row" style="display:none; margin-top:15px; max-width: 300px;">
+                    <label style="font-weight:600; color:#555;">Amount Paid (R)</label>
+                    <input type="number" id="amountPaid" step="0.01" min="0" placeholder="0.00" oninput="updateTotals()" style="margin-top:5px;">
+                </div>
+            </div>
+        </div>
+
+        <!-- Client Info -->
+        <div class="form-section">
+            <h2 class="section-title">Client Information</h2>
+            <div class="form-row">
+                <div class="form-group">
+                    <label>Client Name *</label>
+                    <input type="text" id="clientName" required>
+                </div>
+                <div class="form-group">
+                    <label>Email Address</label>
+                    <input type="email" id="clientEmail">
+                </div>
+            </div>
+            <div class="form-row">
+                <div class="form-group">
+                    <label>Phone Number</label>
+                    <input type="tel" id="clientPhone">
+                </div>
+                <div class="form-group">
+                    <label>Event Type</label>
+                    <select id="eventType">
+                        <option>Birthday Party</option>
+                        <option>Wedding</option>
+                        <option>Corporate Event</option>
+                        <option>Baby Shower</option>
+                        <option>Anniversary</option>
+                        <option>Other</option>
+                    </select>
+                </div>
+            </div>
+            <div class="form-group">
+                <label>Event Address</label>
+                <textarea id="eventAddress" rows="3"></textarea>
+            </div>
+        </div>
+
+        <!-- Items -->
+        <div class="form-section">
+            <h2 class="section-title">Items</h2>
+            <div class="items-section">
+                <div class="table-wrapper">
+                    <table class="items-table" id="itemsTable">
+                        <thead>
+                            <tr>
+                                <th width="35%">Description</th>
+                                <th width="15%">Quantity</th>
+                                <th width="15%">Unit Price (R)</th>
+                                <th width="15%">VAT %</th>
+                                <th width="15%">Total (R)</th>
+                                <th width="5%"></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><input type="text" placeholder="Item description" onchange="updateTotals()"></td>
+                                <td><input type="number" value="1" min="1" onchange="calculateRowTotal(this)" oninput="calculateRowTotal(this)"></td>
+                                <td><input type="number" step="0.01" min="0" onchange="calculateRowTotal(this)" oninput="calculateRowTotal(this)"></td>
+                                <td><input type="number" value="15" min="0" max="100" onchange="calculateRowTotal(this)" oninput="calculateRowTotal(this)"></td>
+                                <td><input type="text" readonly value="R 0.00"></td>
+                                <td><button type="button" class="remove-btn" onclick="removeRow(this)">×</button></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <button type="button" class="add-item-btn" onclick="addRow()">+ Add Item</button>
+            </div>
+        </div>
+
+        <!-- Totals -->
+        <div class="totals-section">
+            <div class="total-row"><span>Subtotal:</span><span id="subtotal">R 0.00</span></div>
+            <div class="total-row"><span>VAT:</span><span id="vatAmount">R 0.00</span></div>
+            <div class="total-row discount">
+                <span>Discount (%):</span>
+                <input type="number" id="discountPercent" value="0" min="0" max="100" onchange="updateTotals()" oninput="updateTotals()" style="width:70px; padding:6px; border-radius:5px; border:none; text-align:center;">
+            </div>
+            <div class="total-row"><span>Discount Amount:</span><span id="discountAmount">R 0.00</span></div>
+            <div class="total-row final"><span>TOTAL:</span><span id="finalTotal">R 0.00</span></div>
+            <div class="total-row" id="amount-paid-row" style="display:none; color:#a8f0c0;"><span>Amount Paid:</span><span id="amountPaidDisplay">R 0.00</span></div>
+            <div class="total-row" id="balance-due-row" style="display:none; font-weight:700; font-size:18px; color:#ffcc00; border-top: 1px solid rgba(255,255,255,0.3); padding-top:10px; margin-top:5px;"><span>BALANCE DUE:</span><span id="balanceDue">R 0.00</span></div>
+        </div>
+
+        <!-- Banking Details -->
+        <div class="form-section">
+            <h2 class="section-title">Banking Details</h2>
+            <div class="banking-section">
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Bank Name</label>
+                        <input type="text" id="bankName" value="First National Bank">
                     </div>
-                    <div class="content">
-                        <div class="section">
-                            <h3>QUOTATION</h3>
-                            <p><strong>Quote #:</strong> ${quoteData.quoteNumber}</p>
-                            <p><strong>Date:</strong> ${quoteData.date}</p>
-                            <p><strong>Valid Until:</strong> ${quoteData.validUntil}</p>
-                        </div>
-                        <div class="section">
-                            <h3>CLIENT DETAILS</h3>
-                            <p><strong>${quoteData.clientName}</strong></p>
-                            <p>Email: ${quoteData.clientEmail}</p>
-                            <p>Phone: ${quoteData.clientPhone}</p>
-                            <p>Event Type: ${quoteData.eventType}</p>
-                            <p>Event Date: ${quoteData.eventDate}</p>
-                            <p>Address: ${quoteData.eventAddress}</p>
-                        </div>
-                        <table>
-                            <thead>
-                                <tr>
-                                    <th>Description</th>
-                                    <th>Qty</th>
-                                    <th>Unit Price</th>
-                                    <th>VAT %</th>
-                                    <th>Total</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                ${itemsHtml}
-                            </tbody>
-                        </table>
-                        <div class="totals">
-                            <p>Subtotal: ${quoteData.subtotal}</p>
-                            <p>VAT: ${quoteData.vatAmount}</p>
-                            ${discountRow}
-                            <p><strong>TOTAL: ${quoteData.finalTotal}</strong></p>
-                        </div>
-                        ${bankingSection}
-                        <div class="section">
-                            <h3>TERMS & CONDITIONS</h3>
-                            <p>${quoteData.terms}</p>
-                        </div>
-                        <div class="section">
-                            <p><strong>Janesha Bachen</strong> - Owner<br>
-                            Phone: 071 733 1694<br>
-                            Email: Janesha@deluxedesigncreations.co.za<br>
-                            Address: 4 UBA Road, Maidstone Village, Tongaat, KwaZulu-Natal, 4400</p>
-                        </div>
+                    <div class="form-group">
+                        <label>Account Holder</label>
+                        <input type="text" id="accountHolder" value="J Bachen">
                     </div>
-                </body>
-                </html>
-            `;
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Account Number</label>
+                        <input type="text" id="accountNumber" value="62423359951">
+                    </div>
+                    <div class="form-group">
+                        <label>Branch Code</label>
+                        <input type="text" id="branchCode" value="250655">
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Terms -->
+        <div class="form-section">
+            <div class="form-group">
+                <label>Terms & Conditions / Notes</label>
+                <textarea id="terms" rows="4">50% deposit required to confirm booking. Final payment due 48 hours before event date. Prices valid for 7 days from quote date.</textarea>
+            </div>
+        </div>
+
+        <!-- Action Buttons -->
+        <div class="action-buttons">
+            <button type="button" class="btn btn-primary" onclick="previewDoc()">Preview</button>
+            <button type="button" class="btn btn-secondary" onclick="exportToPDF()">Export to PDF</button>
+            <button type="button" class="btn btn-primary" onclick="exportToJPG()">Export to JPG</button>
+        </div>
+
+    </div>
+</div>
+
+<script>
+    let currentMode = 'quote';
+    let paymentStatus = 'unpaid';
+
+    window.onload = function () {
+        document.getElementById('quoteDate').value = new Date().toISOString().split('T')[0];
+        const validDate = new Date();
+        validDate.setDate(validDate.getDate() + 7);
+        document.getElementById('validUntil').value = validDate.toISOString().split('T')[0];
+        document.getElementById('dueDate').value = validDate.toISOString().split('T')[0];
+        generateDocNumber();
+        updateTotals();
+    };
+
+    function setMode(mode) {
+        currentMode = mode;
+        const isInvoice = mode === 'invoice';
+
+        // Toggle button styles
+        document.getElementById('btn-quote').classList.toggle('active', !isInvoice);
+        document.getElementById('btn-invoice').classList.toggle('active', isInvoice);
+
+        // Badge
+        const badge = document.getElementById('doc-badge');
+        badge.textContent = isInvoice ? 'INVOICE' : 'QUOTATION';
+        badge.className = 'doc-type-badge' + (isInvoice ? ' invoice-badge' : '');
+
+        // Section title and number label
+        document.getElementById('doc-section-title').textContent = isInvoice ? 'Invoice Information' : 'Quote Information';
+        document.getElementById('doc-number-label').textContent = isInvoice ? 'Invoice Number' : 'Quote Number';
+
+        // Show/hide valid-until vs due-date
+        document.getElementById('valid-until-group').style.display = isInvoice ? 'none' : 'flex';
+        document.getElementById('due-date-group').style.display = isInvoice ? 'flex' : 'none';
+
+        // Payment status section
+        document.getElementById('payment-status-section').style.display = isInvoice ? 'flex' : 'none';
+
+        // Regenerate number with prefix
+        generateDocNumber();
+        updateTotals();
+    }
+
+    function selectStatus(status) {
+        paymentStatus = status;
+        document.querySelectorAll('.status-badge').forEach(b => b.classList.remove('selected'));
+        document.querySelector('.status-badge.' + status).classList.add('selected');
+        document.getElementById('partial-amount-row').style.display = status === 'partial' ? 'block' : 'none';
+        updateTotals();
+    }
+
+    function generateDocNumber() {
+        const prefix = currentMode === 'invoice' ? 'DDC-INV-' : 'DDC-';
+        const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+        let result = prefix;
+        for (let i = 0; i < 6; i++) result += chars.charAt(Math.floor(Math.random() * chars.length));
+        document.getElementById('quoteNumber').value = result;
+    }
+
+    function calculateRowTotal(el) {
+        const row = el.parentNode.parentNode;
+        const inputs = row.querySelectorAll('input');
+        const qty = parseFloat(inputs[1].value) || 0;
+        const price = parseFloat(inputs[2].value) || 0;
+        const vat = parseFloat(inputs[3].value) || 0;
+        const sub = qty * price;
+        inputs[4].value = 'R ' + (sub + sub * (vat / 100)).toFixed(2);
+        updateTotals();
+    }
+
+    function updateTotals() {
+        let subtotal = 0, totalVAT = 0;
+        document.querySelectorAll('#itemsTable tbody tr').forEach(row => {
+            const inputs = row.querySelectorAll('input');
+            if (inputs.length >= 4) {
+                const qty = parseFloat(inputs[1].value) || 0;
+                const price = parseFloat(inputs[2].value) || 0;
+                const vat = parseFloat(inputs[3].value) || 0;
+                subtotal += qty * price;
+                totalVAT += qty * price * (vat / 100);
+            }
+        });
+
+        const discPct = parseFloat(document.getElementById('discountPercent').value) || 0;
+        const discAmt = (subtotal + totalVAT) * (discPct / 100);
+        const finalTotal = subtotal + totalVAT - discAmt;
+
+        document.getElementById('subtotal').textContent = 'R ' + subtotal.toFixed(2);
+        document.getElementById('vatAmount').textContent = 'R ' + totalVAT.toFixed(2);
+        document.getElementById('discountAmount').textContent = 'R ' + discAmt.toFixed(2);
+        document.getElementById('finalTotal').textContent = 'R ' + finalTotal.toFixed(2);
+
+        // Invoice balance due
+        const paidRow = document.getElementById('amount-paid-row');
+        const balRow = document.getElementById('balance-due-row');
+
+        if (currentMode === 'invoice') {
+            if (paymentStatus === 'paid') {
+                paidRow.style.display = 'flex';
+                balRow.style.display = 'flex';
+                document.getElementById('amountPaidDisplay').textContent = 'R ' + finalTotal.toFixed(2);
+                document.getElementById('balanceDue').textContent = 'R 0.00';
+            } else if (paymentStatus === 'partial') {
+                const paid = parseFloat(document.getElementById('amountPaid').value) || 0;
+                const balance = Math.max(0, finalTotal - paid);
+                paidRow.style.display = 'flex';
+                balRow.style.display = 'flex';
+                document.getElementById('amountPaidDisplay').textContent = 'R ' + paid.toFixed(2);
+                document.getElementById('balanceDue').textContent = 'R ' + balance.toFixed(2);
+            } else {
+                paidRow.style.display = 'none';
+                balRow.style.display = 'flex';
+                document.getElementById('balanceDue').textContent = 'R ' + finalTotal.toFixed(2);
+            }
+        } else {
+            paidRow.style.display = 'none';
+            balRow.style.display = 'none';
         }
+    }
 
-        // Export the quote as a PDF
-        function exportToPDF() {
-            const clientName = document.getElementById('clientName').value;
-            if (!clientName) {
-                alert('Please enter a client name before exporting.');
-                return;
+    function addRow() {
+        const tbody = document.querySelector('#itemsTable tbody');
+        const newRow = document.createElement('tr');
+        newRow.innerHTML =
+            '<td><input type="text" placeholder="Item description" onchange="updateTotals()"></td>' +
+            '<td><input type="number" value="1" min="1" onchange="calculateRowTotal(this)" oninput="calculateRowTotal(this)"></td>' +
+            '<td><input type="number" step="0.01" min="0" onchange="calculateRowTotal(this)" oninput="calculateRowTotal(this)"></td>' +
+            '<td><input type="number" value="15" min="0" max="100" onchange="calculateRowTotal(this)" oninput="calculateRowTotal(this)"></td>' +
+            '<td><input type="text" readonly value="R 0.00"></td>' +
+            '<td><button type="button" class="remove-btn" onclick="removeRow(this)">×</button></td>';
+        tbody.appendChild(newRow);
+        updateTotals();
+    }
+
+    function removeRow(btn) {
+        const row = btn.parentNode.parentNode;
+        const tbody = row.parentNode;
+        if (tbody.children.length > 1) { row.remove(); updateTotals(); }
+        else alert('At least one item is required.');
+    }
+
+    function getDocData() {
+        const isInvoice = currentMode === 'invoice';
+        const items = [];
+        document.querySelectorAll('#itemsTable tbody tr').forEach(row => {
+            const inputs = row.querySelectorAll('input');
+            if (inputs[0].value) {
+                items.push({
+                    description: inputs[0].value,
+                    quantity: inputs[1].value,
+                    unitPrice: inputs[2].value,
+                    vatPercent: inputs[3].value,
+                    total: inputs[4].value
+                });
             }
+        });
 
-            if (typeof window.jspdf === 'undefined') {
-                alert('PDF export library not loaded. Please try refreshing the page.');
-                return;
-            }
+        return {
+            isInvoice,
+            docLabel: isInvoice ? 'INVOICE' : 'QUOTATION',
+            docNumber: document.getElementById('quoteNumber').value,
+            date: document.getElementById('quoteDate').value,
+            validUntil: document.getElementById('validUntil').value,
+            dueDate: document.getElementById('dueDate').value,
+            eventDate: document.getElementById('eventDate').value,
+            clientName: document.getElementById('clientName').value,
+            clientEmail: document.getElementById('clientEmail').value,
+            clientPhone: document.getElementById('clientPhone').value,
+            eventType: document.getElementById('eventType').value,
+            eventAddress: document.getElementById('eventAddress').value,
+            bankName: document.getElementById('bankName').value,
+            accountHolder: document.getElementById('accountHolder').value,
+            accountNumber: document.getElementById('accountNumber').value,
+            branchCode: document.getElementById('branchCode').value,
+            terms: document.getElementById('terms').value,
+            subtotal: document.getElementById('subtotal').textContent,
+            vatAmount: document.getElementById('vatAmount').textContent,
+            discountAmount: document.getElementById('discountAmount').textContent,
+            finalTotal: document.getElementById('finalTotal').textContent,
+            paymentStatus: paymentStatus,
+            amountPaid: document.getElementById('amountPaid') ? document.getElementById('amountPaid').value : '0',
+            balanceDue: document.getElementById('balanceDue').textContent,
+            items
+        };
+    }
 
-            const jsPDF = window.jspdf.jsPDF;
-            const doc = new jsPDF();
-            
-            // Header
-            doc.setFillColor(139, 124, 184);
-            doc.rect(0, 0, 210, 40, 'F');
-            
+    function previewDoc() {
+        if (!document.getElementById('clientName').value) { alert('Please enter a client name.'); return; }
+        const d = getDocData();
+        const itemsHtml = d.items.map(item => `
+            <tr>
+                <td>${item.description}</td>
+                <td>${item.quantity}</td>
+                <td>R ${parseFloat(item.unitPrice || 0).toFixed(2)}</td>
+                <td>${item.vatPercent}%</td>
+                <td>${item.total}</td>
+            </tr>`).join('');
+
+        const statusColors = { paid: '#4caf50', partial: '#ff9800', unpaid: '#e91e63' };
+        const statusBadge = d.isInvoice ? `<span style="background:${statusColors[d.paymentStatus]};color:white;padding:4px 14px;border-radius:12px;font-weight:700;font-size:12px;">${d.paymentStatus.toUpperCase()}</span>` : '';
+
+        const balanceRow = d.isInvoice && d.paymentStatus !== 'unpaid' ? `<p><strong>Amount Paid: ${d.isInvoice && d.paymentStatus === 'paid' ? d.finalTotal : 'R ' + parseFloat(d.amountPaid || 0).toFixed(2)}</strong></p><p><strong>Balance Due: ${d.balanceDue}</strong></p>` : '';
+        const dateRow = d.isInvoice ? `<p><strong>Due Date:</strong> ${d.dueDate}</p>` : `<p><strong>Valid Until:</strong> ${d.validUntil}</p>`;
+        const discRow = parseFloat(d.discountAmount.replace('R ', '')) > 0 ? `<p>Discount: ${d.discountAmount}</p>` : '';
+
+        const w = window.open('', '_blank', 'width=800,height=1000');
+        w.document.write(`<!DOCTYPE html><html><head><title>${d.docLabel} - ${d.docNumber}</title>
+        <style>body{font-family:Arial,sans-serif;margin:20px;background:white}.header{background:#8b7cb8;color:white;padding:30px;text-align:center}.content{padding:20px}table{width:100%;border-collapse:collapse;margin:15px 0}th,td{border:1px solid #ddd;padding:8px;text-align:left}th{background:#f2f2f2}.totals{background:#8b7cb8;color:white;padding:15px}.section{margin:20px 0}</style>
+        </head><body>
+        <div class="header"><h1>DELUXE DESIGN CREATIONS</h1><p>Crafting beautiful moments, one celebration at a time</p></div>
+        <div class="content">
+        <div class="section"><h3>${d.docLabel} ${statusBadge}</h3><p><strong>${d.isInvoice ? 'Invoice' : 'Quote'} #:</strong> ${d.docNumber}</p><p><strong>Date:</strong> ${d.date}</p>${dateRow}<p><strong>Event Date:</strong> ${d.eventDate}</p></div>
+        <div class="section"><h3>CLIENT DETAILS</h3><p><strong>${d.clientName}</strong></p><p>Email: ${d.clientEmail}</p><p>Phone: ${d.clientPhone}</p><p>Event: ${d.eventType} — ${d.eventDate}</p><p>Address: ${d.eventAddress}</p></div>
+        <table><thead><tr><th>Description</th><th>Qty</th><th>Unit Price</th><th>VAT %</th><th>Total</th></tr></thead><tbody>${itemsHtml}</tbody></table>
+        <div class="totals"><p>Subtotal: ${d.subtotal}</p><p>VAT: ${d.vatAmount}</p>${discRow}<p><strong>TOTAL: ${d.finalTotal}</strong></p>${balanceRow}</div>
+        <div class="section"><h3>BANKING DETAILS</h3><p>Bank: ${d.bankName}</p><p>Account Holder: ${d.accountHolder}</p><p>Account Number: ${d.accountNumber}</p><p>Branch Code: ${d.branchCode}</p></div>
+        <div class="section"><h3>TERMS & CONDITIONS</h3><p>${d.terms}</p></div>
+        <div class="section"><p><strong>Janesha Bachen</strong> — Owner<br>071 733 1694 | Janesha@deluxedesigncreations.co.za<br>4 UBA Road, Maidstone Village, Tongaat, KwaZulu-Natal, 4400</p></div>
+        </div></body></html>`);
+        w.document.close();
+    }
+
+    function exportToPDF() {
+        if (!document.getElementById('clientName').value) { alert('Please enter a client name.'); return; }
+        if (typeof window.jspdf === 'undefined') { alert('PDF library not loaded. Please refresh.'); return; }
+
+        const d = getDocData();
+        const jsPDF = window.jspdf.jsPDF;
+        const doc = new jsPDF();
+
+        // Header
+        doc.setFillColor(139, 124, 184);
+        doc.rect(0, 0, 210, 40, 'F');
+        doc.setTextColor(255, 255, 255);
+        doc.setFontSize(20);
+        doc.setFont(undefined, 'bold');
+        doc.text('DELUXE DESIGN CREATIONS', 105, 18, { align: 'center' });
+        doc.setFontSize(11);
+        doc.setFont(undefined, 'italic');
+        doc.text('Crafting beautiful moments, one celebration at a time', 105, 28, { align: 'center' });
+        doc.setFontSize(14);
+        doc.setFont(undefined, 'bold');
+        doc.text(d.docLabel, 105, 37, { align: 'center' });
+
+        doc.setTextColor(0, 0, 0);
+        doc.setFont(undefined, 'normal');
+        let y = 52;
+
+        // If invoice, show status badge area
+        if (d.isInvoice) {
+            const statusColors = { paid: [76, 175, 80], partial: [255, 152, 0], unpaid: [233, 30, 99] };
+            const sc = statusColors[d.paymentStatus];
+            doc.setFillColor(sc[0], sc[1], sc[2]);
+            doc.roundedRect(150, y - 7, 45, 10, 3, 3, 'F');
             doc.setTextColor(255, 255, 255);
-            doc.setFontSize(20);
+            doc.setFontSize(9);
             doc.setFont(undefined, 'bold');
-            doc.text('DELUXE DESIGN CREATIONS', 105, 20, { align: 'center' });
-            
-            doc.setFontSize(12);
-            doc.setFont(undefined, 'italic');
-            doc.text('Crafting beautiful moments, one celebration at a time', 105, 30, { align: 'center' });
-            
-            // Reset text color
+            doc.text(d.paymentStatus.toUpperCase(), 172.5, y - 0.5, { align: 'center' });
             doc.setTextColor(0, 0, 0);
             doc.setFont(undefined, 'normal');
-            
-            let y = 55;
-            
-            // Quote details
-            doc.setFontSize(16);
-            doc.setFont(undefined, 'bold');
-            doc.text('QUOTATION', 20, y);
-            y += 10;
-            
-            doc.setFontSize(10);
-            doc.setFont(undefined, 'normal');
-            const quoteNumber = document.getElementById('quoteNumber').value;
-            doc.text('Quote #: ' + quoteNumber, 20, y);
-            doc.text('Date: ' + document.getElementById('quoteDate').value, 120, y);
-            y += 5;
-            doc.text('Valid Until: ' + document.getElementById('validUntil').value, 20, y);
-            doc.text('Event Date: ' + document.getElementById('eventDate').value, 120, y);
-            y += 15;
-            
-            // Client details
-            doc.setFontSize(12);
-            doc.setFont(undefined, 'bold');
-            doc.text('CLIENT DETAILS', 20, y);
-            y += 8;
-            
-            doc.setFontSize(10);
-            doc.setFont(undefined, 'normal');
-            doc.text('Name: ' + document.getElementById('clientName').value, 20, y);
-            y += 5;
-            doc.text('Email: ' + document.getElementById('clientEmail').value, 20, y);
-            y += 5;
-            doc.text('Phone: ' + document.getElementById('clientPhone').value, 20, y);
-            y += 5;
-            doc.text('Event Type: ' + document.getElementById('eventType').value, 20, y);
-            y += 15;
-            
-            // Items table header
-            doc.setFontSize(10);
-            doc.setFont(undefined, 'bold');
-            doc.text('Description', 20, y);
-            doc.text('Qty', 120, y);
-            doc.text('Unit Price', 140, y);
-            doc.text('VAT%', 165, y);
-            doc.text('Total', 180, y);
-            y += 3;
-            doc.line(20, y, 190, y);
-            y += 5;
-            
-            // Items
-            doc.setFont(undefined, 'normal');
-            const rows = document.querySelectorAll('#itemsTable tbody tr');
-            rows.forEach(row => {
-                const inputs = row.querySelectorAll('input');
-                const description = inputs[0].value;
-                if (description) {
-                    const quantity = inputs[1].value;
-                    const unitPrice = inputs[2].value;
-                    const vatPercent = inputs[3].value;
-                    const total = inputs[4].value;
-                    
-                    doc.text(description.substring(0, 40), 20, y);
-                    doc.text(quantity, 120, y);
-                    doc.text('R ' + parseFloat(unitPrice || 0).toFixed(2), 140, y);
-                    doc.text(vatPercent + '%', 165, y);
-                    doc.text(total, 180, y);
-                    y += 5;
-                }
-            });
-            
-            y += 5;
-            doc.line(20, y, 190, y);
-            y += 8;
-            
-            // Totals
-            doc.setFont(undefined, 'bold');
-            doc.text('Subtotal:', 140, y);
-            doc.text(document.getElementById('subtotal').textContent, 170, y);
-            y += 5;
-            doc.text('VAT:', 140, y);
-            doc.text(document.getElementById('vatAmount').textContent, 170, y);
-            y += 5;
-            if (parseFloat(document.getElementById('discountAmount').textContent.replace('R ', '')) > 0) {
-                 doc.text('Discount:', 140, y);
-                 doc.text(document.getElementById('discountAmount').textContent, 170, y);
-                 y += 5;
-            }
-            doc.text('TOTAL:', 140, y);
-            doc.text(document.getElementById('finalTotal').textContent, 170, y);
-            
-            // Banking details
-            const bankName = document.getElementById('bankName').value;
-            if (bankName) {
-                y += 15;
-                doc.setFontSize(12);
-                doc.setFont(undefined, 'bold');
-                doc.text('BANKING DETAILS', 20, y);
-                y += 8;
-                doc.setFontSize(10);
-                doc.setFont(undefined, 'normal');
-                doc.text('Bank: ' + bankName, 20, y);
-                y += 5;
-                doc.text('Account Holder: ' + document.getElementById('accountHolder').value, 20, y);
-                y += 5;
-                doc.text('Account Number: ' + document.getElementById('accountNumber').value, 20, y);
-                y += 5;
-                doc.text('Branch Code: ' + document.getElementById('branchCode').value, 20, y);
-            }
-            
-            // Terms
-            y += 15;
-            doc.setFontSize(12);
-            doc.setFont(undefined, 'bold');
-            doc.text('TERMS & CONDITIONS', 20, y);
-            y += 8;
-            doc.setFontSize(10);
-            doc.setFont(undefined, 'normal');
-            const terms = document.getElementById('terms').value;
-            const splitTerms = doc.splitTextToSize(terms, 170);
-            doc.text(splitTerms, 20, y);
-            
-            // Contact info
-            y += splitTerms.length * 5 + 10;
-            doc.setFont(undefined, 'bold');
-            doc.text('Contact Information:', 20, y);
-            y += 5;
-            doc.setFont(undefined, 'normal');
-            doc.text('Janesha Bachen - Owner', 20, y);
-            y += 5;
-            doc.text('Phone: 071 733 1694', 20, y);
-            y += 5;
-            doc.text('Email: Janesha@deluxedesigncreations.co.za', 20, y);
-            y += 5;
-            doc.text('Address: 4 UBA Road, Maidstone Village, Tongaat, KwaZulu-Natal, 4400', 20, y);
-            
-            // Save the PDF
-            const filename = 'Quote-' + quoteNumber + '.pdf';
-            doc.save(filename);
         }
 
-        // Export the quote as a JPG
-        function exportToJPG() {
-            const clientName = document.getElementById('clientName').value;
-            if (!clientName) {
-                alert('Please enter a client name before exporting.');
-                return;
-            }
-
-            const element = document.getElementById('quote-container');
-            domtoimage.toJpeg(element, { quality: 0.95 })
-                .then(function (dataUrl) {
-                    const quoteNumber = document.getElementById('quoteNumber').value;
-                    const link = document.createElement('a');
-                    link.download = 'Quote-' + quoteNumber + '.jpeg';
-                    link.href = dataUrl;
-                    link.click();
-                })
-                .catch(function (error) {
-                    console.error('oops, something went wrong!', error);
-                });
+        doc.setFontSize(10);
+        doc.text(`${d.isInvoice ? 'Invoice' : 'Quote'} #: ${d.docNumber}`, 20, y);
+        doc.text('Date: ' + d.date, 120, y); y += 5;
+        if (d.isInvoice) {
+            doc.text('Due Date: ' + d.dueDate, 20, y);
+        } else {
+            doc.text('Valid Until: ' + d.validUntil, 20, y);
         }
-    </script>
+        doc.text('Event Date: ' + d.eventDate, 120, y); y += 12;
+
+        doc.setFontSize(12);
+        doc.setFont(undefined, 'bold');
+        doc.text('CLIENT DETAILS', 20, y); y += 7;
+        doc.setFontSize(10);
+        doc.setFont(undefined, 'normal');
+        doc.text('Name: ' + d.clientName, 20, y); y += 5;
+        doc.text('Email: ' + d.clientEmail, 20, y); y += 5;
+        doc.text('Phone: ' + d.clientPhone, 20, y); y += 5;
+        doc.text('Event Type: ' + d.eventType, 20, y); y += 12;
+
+        // Items table header
+        doc.setFont(undefined, 'bold');
+        doc.text('Description', 20, y);
+        doc.text('Qty', 110, y);
+        doc.text('Unit Price', 128, y);
+        doc.text('VAT%', 158, y);
+        doc.text('Total', 178, y); y += 3;
+        doc.line(20, y, 195, y); y += 5;
+
+        doc.setFont(undefined, 'normal');
+        d.items.forEach(item => {
+            doc.text(item.description.substring(0, 38), 20, y);
+            doc.text(item.quantity, 110, y);
+            doc.text('R ' + parseFloat(item.unitPrice || 0).toFixed(2), 128, y);
+            doc.text(item.vatPercent + '%', 158, y);
+            doc.text(item.total, 178, y);
+            y += 6;
+        });
+
+        y += 3; doc.line(20, y, 195, y); y += 8;
+
+        doc.setFont(undefined, 'bold');
+        doc.text('Subtotal:', 140, y); doc.text(d.subtotal, 170, y); y += 6;
+        doc.text('VAT:', 140, y); doc.text(d.vatAmount, 170, y); y += 6;
+        if (parseFloat(d.discountAmount.replace('R ', '')) > 0) {
+            doc.text('Discount:', 140, y); doc.text(d.discountAmount, 170, y); y += 6;
+        }
+        doc.text('TOTAL:', 140, y); doc.text(d.finalTotal, 170, y); y += 6;
+
+        if (d.isInvoice && d.paymentStatus !== 'unpaid') {
+            const paid = d.paymentStatus === 'paid' ? d.finalTotal : 'R ' + parseFloat(d.amountPaid || 0).toFixed(2);
+            doc.text('Amount Paid:', 140, y); doc.text(paid, 170, y); y += 6;
+            doc.text('Balance Due:', 140, y); doc.text(d.balanceDue, 170, y); y += 6;
+        }
+
+        y += 6;
+        doc.setFontSize(12);
+        doc.setFont(undefined, 'bold');
+        doc.text('BANKING DETAILS', 20, y); y += 7;
+        doc.setFontSize(10);
+        doc.setFont(undefined, 'normal');
+        doc.text('Bank: ' + d.bankName, 20, y); y += 5;
+        doc.text('Account Holder: ' + d.accountHolder, 20, y); y += 5;
+        doc.text('Account Number: ' + d.accountNumber, 20, y); y += 5;
+        doc.text('Branch Code: ' + d.branchCode, 20, y); y += 10;
+
+        doc.setFontSize(12);
+        doc.setFont(undefined, 'bold');
+        doc.text('TERMS & CONDITIONS', 20, y); y += 7;
+        doc.setFontSize(10);
+        doc.setFont(undefined, 'normal');
+        const splitTerms = doc.splitTextToSize(d.terms, 170);
+        doc.text(splitTerms, 20, y); y += splitTerms.length * 5 + 8;
+
+        doc.setFont(undefined, 'bold');
+        doc.text('Contact Information:', 20, y); y += 5;
+        doc.setFont(undefined, 'normal');
+        doc.text('Janesha Bachen - Owner', 20, y); y += 5;
+        doc.text('Phone: 071 733 1694', 20, y); y += 5;
+        doc.text('Email: Janesha@deluxedesigncreations.co.za', 20, y); y += 5;
+        doc.text('Address: 4 UBA Road, Maidstone Village, Tongaat, KwaZulu-Natal, 4400', 20, y);
+
+        doc.save(`${d.isInvoice ? 'Invoice' : 'Quote'}-${d.docNumber}.pdf`);
+    }
+
+    function exportToJPG() {
+        if (!document.getElementById('clientName').value) { alert('Please enter a client name.'); return; }
+        const d = getDocData();
+        domtoimage.toJpeg(document.getElementById('quote-container'), { quality: 0.95 })
+            .then(function (dataUrl) {
+                const link = document.createElement('a');
+                link.download = `${d.isInvoice ? 'Invoice' : 'Quote'}-${d.docNumber}.jpeg`;
+                link.href = dataUrl;
+                link.click();
+            })
+            .catch(function (error) { console.error('Export failed:', error); });
+    }
+</script>
 </body>
 </html>
